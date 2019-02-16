@@ -1,0 +1,6 @@
+export const AUTH_SIGN_IN = 'AUTH_SIGN_IN';
+export const AUTH_SIGNED_IN = 'AUTH_SIGNED_IN';
+export const AUTH_SIGN_OUT = 'AUTH_SIGN_OUT';
+export const AUTH_STATE_CHANGED = 'AUTH_STATE_CHANGED';
+export const AUTH_GET_CURRENT = 'AUTH_GET_CURRENT';
+export const AUTH_SET_USER = 'AUTH_SET_USER';
