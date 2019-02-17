@@ -4,3 +4,6 @@ export const AUTH_SIGN_OUT = 'AUTH_SIGN_OUT';
 export const AUTH_STATE_CHANGED = 'AUTH_STATE_CHANGED';
 export const AUTH_GET_CURRENT = 'AUTH_GET_CURRENT';
 export const AUTH_SET_USER = 'AUTH_SET_USER';
+export const AUTH_INITIALIZED = 'AUTH_INITIALIZED';
+
+export const DB_ADD_USER = 'DB_ADD_USER';

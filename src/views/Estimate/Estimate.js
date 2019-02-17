@@ -1,7 +1,7 @@
 import React from 'react';
 
-const estimateView = () => (
+const EstimateView = () => (
   <div>Estimate</div>
 );
 
-export default estimateView;
+export default EstimateView;

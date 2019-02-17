@@ -2,6 +2,7 @@ import { all, takeLatest } from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/actionTypes';
 import * as authSagas from './auth';
+import * as dbSagas from './db';
 
 export function* watchAuth() {
   yield all([
@@ -12,6 +13,8 @@ export function* watchAuth() {
   ]);
 }
 
-export function* placeholder() {
-  yield null;
+export function* watchDb() {
+  yield all([
+    takeLatest(actionTypes.DB_ADD_USER, dbSagas.addUser),
+  ]);
 }

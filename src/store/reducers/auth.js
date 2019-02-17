@@ -5,6 +5,7 @@ const initialState = {
   email: '',
   uid: '',
   signedIn: false,
+  initialAuthFinished: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -18,6 +19,11 @@ const reducer = (state = initialState, action) => {
     case actionTypes.AUTH_SIGN_OUT:
       return {
         ...initialState,
+      };
+    case actionTypes.AUTH_INITIALIZED:
+      return {
+        ...state,
+        initialAuthFinished: true,
       };
     default: return state;
   }

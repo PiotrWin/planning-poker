@@ -21,3 +21,7 @@ export const signIn = () => ({
 export const signOut = () => ({
   type: actionTypes.AUTH_SIGN_OUT,
 });
+
+export const initialized = () => ({
+  type: actionTypes.AUTH_INITIALIZED,
+});

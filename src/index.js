@@ -14,7 +14,7 @@ import 'normalize.css';
 import App from 'components/App/App';
 import registerServiceWorker from 'utils/registerServiceWorker';
 import authReducer from './store/reducers/auth';
-import { watchAuth } from './store/sagas';
+import { watchAuth, watchDb } from './store/sagas';
 
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -31,6 +31,7 @@ const store = createStore(
 );
 
 sagaMiddleWare.run(watchAuth);
+sagaMiddleWare.run(watchDb);
 
 const app = (
   <Provider store={store}>

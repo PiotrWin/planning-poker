@@ -1,7 +1,9 @@
-import { put } from 'redux-saga/effects';
+import { put, fork, select } from 'redux-saga/effects';
 import { auth, provider } from 'fbase/firebase';
 import { getUserData } from 'utils/helpers';
 import * as actions from '../actions/auth';
+import { initialAuthFinished } from '../selectors';
+import { addUser as addUserToDb } from './db';
 
 export function* getCurrentUser() {
   // TODO: implement
@@ -9,7 +11,10 @@ export function* getCurrentUser() {
 
 export function* signInSaga() {
   try {
-    yield auth.signInWithPopup(provider);
+    const { additionalUserInfo, user } = yield auth.signInWithPopup(provider);
+    if (additionalUserInfo.isNewUser) {
+      yield fork(addUserToDb, getUserData(user));
+    }
   } catch (e) {
     // TODO: handle error
   }
@@ -17,11 +22,16 @@ export function* signInSaga() {
 
 export function* signOutSaga() {
   yield auth.signOut();
+  yield console.log(auth.currentUser);
 }
 
 export function* stateChangedSaga({ user }) {
   if (user) {
     yield put(actions.setUser(getUserData(user)));
+  }
+  const initialized = yield select(initialAuthFinished);
+  if (!initialized) {
+    yield put(actions.initialized());
   }
 }
 
