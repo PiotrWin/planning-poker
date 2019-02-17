@@ -6,7 +6,6 @@ import { signOut } from 'store/actions/auth';
 
 import Button from 'components/Button/Button';
 import classes from './Navigation.scss';
-import { auth } from 'firebase';
 
 const Navigation = ({ signedIn, displayName, onSignOut }) => (
   <nav className={classes.nav}>
@@ -16,14 +15,14 @@ const Navigation = ({ signedIn, displayName, onSignOut }) => (
         activeClassName={classes['nav__link--active']}
         to="/estimate"
       >
-    Estimate
+        Estimate
       </NavLink>
       <NavLink
         className={classes.nav__link}
         activeClassName={classes['nav__link--active']}
-        to="/my-estimates"
+        to="/my-sessions"
       >
-    My estimates
+        My sessions
       </NavLink>
     </div>
     <div className={`${classes.nav__sub} ${classes['nav__sub--right']}`}>

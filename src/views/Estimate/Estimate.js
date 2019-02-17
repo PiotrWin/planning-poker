@@ -1,7 +1,8 @@
 import React from 'react';
+import NewSessionForm from 'components/NewSessionForm/NewSessionForm';
 
 const EstimateView = () => (
-  <div>Estimate</div>
+  <NewSessionForm />
 );
 
 export default EstimateView;

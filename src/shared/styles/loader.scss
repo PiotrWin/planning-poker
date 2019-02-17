@@ -1,0 +1,15 @@
+:global(.loader) {
+  display: flex;
+
+  &--fullscreen {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+  }
+
+  &--middle {
+    justify-content: center;
+    align-items: center;
+  }
+}

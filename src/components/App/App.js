@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Loader from 'react-loader-spinner';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
 import SignInView from 'views/SignIn/SignIn';
 import EstimateView from 'views/Estimate/Estimate';
+import MySessionsView from 'views/MySessions/MySessions';
 
 import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
+import Loader from 'components/Loader/Loader';
 import classes from './App.scss';
 import './style.scss';
 
@@ -23,9 +24,9 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
 
   return (
     <Fragment>
-      <div className={classes.background} />
+      <div className={classes['u-background']} />
       <Navigation />
-      <div className={classes.wrapper}>
+      <div className={classes['l-app-wrapper']}>
         {initialized ? (
           <Switch>
             <ConditionalRoute
@@ -36,9 +37,9 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
             />
             <ConditionalRoute
               enabled={signedIn}
-              path="/my-estimates"
+              path="/my-sessions"
               redirectPath="/sign-in"
-              component={EstimateView}
+              component={MySessionsView}
             />
             <ConditionalRoute
               enabled={!signedIn}
@@ -48,14 +49,8 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
             />
             <Redirect from="*" to={signedIn ? '/estimate' : '/sign-in'} />
           </Switch>
-          ) : (
-            <Loader
-              type="ThreeDots"
-              color="#fff"
-              height={200}
-              width={200}
-            />
-          ) }
+          ) : <Loader />
+        }
       </div>
     </Fragment>
   );

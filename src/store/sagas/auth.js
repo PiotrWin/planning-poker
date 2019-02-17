@@ -12,7 +12,7 @@ export function* getCurrentUser() {
 export function* signInSaga() {
   try {
     const { additionalUserInfo, user } = yield auth.signInWithPopup(provider);
-    if (additionalUserInfo.isNewUser) {
+    if (additionalUserInfo.isNewUser) { // TODO: make it check for the user in db
       yield fork(addUserToDb, getUserData(user));
     }
   } catch (e) {
@@ -22,7 +22,6 @@ export function* signInSaga() {
 
 export function* signOutSaga() {
   yield auth.signOut();
-  yield console.log(auth.currentUser);
 }
 
 export function* stateChangedSaga({ user }) {
