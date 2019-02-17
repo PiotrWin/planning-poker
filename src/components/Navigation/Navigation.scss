@@ -1,0 +1,74 @@
+@import "~shared/styles/index";
+
+.nav {
+  background: $color-primary-dark;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
+
+  &__sub {
+    height: 100%;
+    display: flex;
+
+    &--left {
+      order: 0;
+    }
+
+    &--right {
+      order: 1;
+    }
+  }
+
+  &__link {
+    color: $color-white;
+    text-decoration: none;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    transition: background-color 0.2s;
+
+    &--active {
+      &::after {
+        content: '';
+        background: $color-white;
+        display: block;
+        height: 2px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    &:hover {
+      background: darken($color-primary-dark, 10%);
+    }
+
+    &:active {
+      background: darken($color-primary-dark, 15%);
+    }
+  }
+
+  &__button {
+    background: $color-primary-dark;
+    border: 0;
+    box-shadow: none;
+    transition: background-color 0.2s;
+    border-radius: 0;
+
+    &:hover {
+      box-shadow: none;
+      background: darken($color-primary-dark, 10%);
+      transform: none;
+    }
+
+    &:active {
+      background: darken($color-primary-dark, 15%);
+    }
+  }
+}

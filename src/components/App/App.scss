@@ -1,0 +1,24 @@
+@import "~shared/styles/index";
+
+.wrapper {
+  padding-top: 50px;
+}
+
+.background {
+  background-image: url('../../shared/assets/bg3.jpg');
+  background-position: center;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: $z-index-bg;
+
+  &::after {
+    content: '';
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    background: $color-background-dark;
+    opacity: 0.9;
+  }
+}
