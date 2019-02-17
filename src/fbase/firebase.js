@@ -1,6 +1,5 @@
 import firebase from 'firebase';
 
-console.log('here');
 const config = {
   apiKey: 'AIzaSyDVgFng-KnaQQ8-k_N6TSNUARgGu8z2mKA',
   authDomain: 'planning-poker-1d012.firebaseapp.com',
