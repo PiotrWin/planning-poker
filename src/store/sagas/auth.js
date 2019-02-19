@@ -36,4 +36,3 @@ export function* stateChangedSaga({ user }) {
     yield put(initialized());
   }
 }
-

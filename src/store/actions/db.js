@@ -20,7 +20,16 @@ export const getSessions = () => ({
   type: actionTypes.DB_GET_SESSIONS,
 });
 
-export const sessionsFetched = sessions => ({
-  type: actionTypes.DB_SESSIONS_FETCHED,
-  sessions,
-});
+export const sessionsFetched = (items) => {
+  let sessions = [];
+  if (items) {
+    sessions = Object.keys(items).map(key => ({
+      id: key,
+      ...items[key],
+    }));
+  }
+  return {
+    type: actionTypes.DB_SESSIONS_FETCHED,
+    sessions,
+  };
+};
