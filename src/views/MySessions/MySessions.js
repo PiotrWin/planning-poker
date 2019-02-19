@@ -1,16 +1,20 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { db } from 'fbase/firebase';
 import { getSessions } from 'store/actions/db';
 import SessionsList from 'components/SessionsList/SessionsList';
 import Loader from 'components/Loader/Loader';
 
 
-const MySessionView = ({ loading, initialized, getUserSessions }) => {
+const MySessionView = ({
+  loading,
+  userPath,
+  getUserSessions,
+}) => {
   useEffect(() => {
-    if (!initialized) {
-      getUserSessions();
-    }
+    db.ref(`${userPath}/sessions`).on('value', getUserSessions);
+    return () => db.ref(`${userPath}/sessions`).off('value', getUserSessions);
   }, []);
 
   return loading ? <Loader /> : (
@@ -23,13 +27,13 @@ const MySessionView = ({ loading, initialized, getUserSessions }) => {
 
 MySessionView.propTypes = {
   loading: PropTypes.bool.isRequired,
-  initialized: PropTypes.bool.isRequired,
+  userPath: PropTypes.string.isRequired,
   getUserSessions: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-  initialized: state.db.initialFetchDone,
   loading: state.db.loading,
+  userPath: state.db.userPath,
 });
 
 const mapDispatch = dispatch => ({

@@ -1,9 +1,10 @@
 import { put, fork, select } from 'redux-saga/effects';
 import { auth, provider } from 'fbase/firebase';
 import { getUserData } from 'utils/helpers';
-import * as actions from '../actions/auth';
+import { setUser, initialized } from '../actions/auth';
+import { setUserPath } from '../actions/db';
 import { initialAuthFinished } from '../selectors';
-import { addUser as addUserToDb } from './db';
+import { addUserToDb } from './db';
 
 export function* getCurrentUser() {
   // TODO: implement
@@ -26,11 +27,13 @@ export function* signOutSaga() {
 
 export function* stateChangedSaga({ user }) {
   if (user) {
-    yield put(actions.setUser(getUserData(user)));
+    const userData = getUserData(user);
+    yield put(setUser(userData));
+    yield put(setUserPath(userData.uid));
   }
-  const initialized = yield select(initialAuthFinished);
-  if (!initialized) {
-    yield put(actions.initialized());
+  const isInitialized = yield select(initialAuthFinished);
+  if (!isInitialized) {
+    yield put(initialized());
   }
 }
 

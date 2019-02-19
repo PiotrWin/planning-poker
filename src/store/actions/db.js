@@ -5,9 +5,15 @@ export const addUser = user => ({
   user,
 });
 
-export const addSession = sessionName => ({
+export const setUserPath = uid => ({
+  type: actionTypes.DB_SET_USER_PATH,
+  path: `/users/${uid}`,
+});
+
+export const addSession = (sessionName, history) => ({
   type: actionTypes.DB_ADD_SESSION,
   sessionName,
+  history,
 });
 
 export const getSessions = () => ({

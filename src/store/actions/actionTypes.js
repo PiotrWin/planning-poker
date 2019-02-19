@@ -7,6 +7,7 @@ export const AUTH_SET_USER = 'AUTH_SET_USER';
 export const AUTH_INITIALIZED = 'AUTH_INITIALIZED';
 
 export const DB_ADD_USER = 'DB_ADD_USER';
+export const DB_SET_USER_PATH = 'DB_SET_USER_PATH';
 export const DB_ADD_SESSION = 'DB_ADD_SESSION';
 export const DB_GET_SESSIONS = 'DB_GET_SESSIONS';
 export const DB_SESSIONS_FETCHED = 'DB_SESSIONS_FETCHED';

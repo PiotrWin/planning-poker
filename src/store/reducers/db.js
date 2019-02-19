@@ -4,10 +4,20 @@ const initialState = {
   sessions: [],
   loading: true,
   initialFetchDone: false,
+  userPath: '',
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.AUTH_SIGN_OUT: {
+      return { ...initialState };
+    }
+    case actionTypes.DB_SET_USER_PATH: {
+      return {
+        ...state,
+        userPath: action.path,
+      };
+    }
     case actionTypes.DB_GET_SESSIONS: {
       return {
         ...state,
