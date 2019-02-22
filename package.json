@@ -7,6 +7,7 @@
     "babel-regenerator-runtime": "^6.5.0",
     "dotenv": "^6.2.0",
     "firebase": "^5.8.3",
+    "history": "^4.7.2",
     "lodash": "^4.17.11",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.7.1",

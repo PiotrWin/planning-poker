@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
+import Loader from 'components/Loader/Loader';
 
 const ConditionalRoute = ({
   enabled,
@@ -11,8 +12,11 @@ const ConditionalRoute = ({
   <Route
     {...rest}
     render={props => (enabled
-      ? <Component {...props} />
-      : <Redirect to={redirectPath} />)
+      ? (
+        <Suspense fallback={<Loader />}>
+          <Component {...props} />
+        </Suspense>
+      ) : <Redirect to={redirectPath} />)
     }
   />
 );

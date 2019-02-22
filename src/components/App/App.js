@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, lazy, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
+
 import SignInView from 'views/SignIn/SignIn';
 import EstimateView from 'views/Estimate/Estimate';
 import MySessionsView from 'views/MySessions/MySessions';
@@ -15,6 +16,10 @@ import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
 import classes from './App.scss';
 import './style.scss';
+
+// const SignInView = lazy(() => import('views/SignIn/SignIn'));
+// const EstimateView = lazy(() => import('views/Estimate/Estimate'));
+// const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
 
 const app = ({ signedIn, initialized, onUserStateChanged }) => {
   useEffect(() => {

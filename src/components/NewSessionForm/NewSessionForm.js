@@ -7,14 +7,14 @@ import { addSession } from 'store/actions/db';
 
 import Button from 'components/Button/Button';
 
-const NewSessionForm = ({ startNewSession, history }) => {
+const NewSessionForm = ({ startNewSession }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (value.length) {
-      startNewSession(value, history);
+      startNewSession(value);
       setValue('');
     }
   };
@@ -43,7 +43,6 @@ const NewSessionForm = ({ startNewSession, history }) => {
 
 NewSessionForm.propTypes = {
   startNewSession: PropTypes.func.isRequired,
-  history: PropTypes.shape().isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -51,4 +50,4 @@ const mapDispatch = dispatch => ({
     (sessionName, history) => dispatch(addSession(sessionName, history)),
 });
 
-export default connect(null, mapDispatch)(withRouter(NewSessionForm));
+export default connect(null, mapDispatch)(NewSessionForm);
