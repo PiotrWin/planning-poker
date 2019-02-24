@@ -25,10 +25,7 @@ ConditionalRoute.propTypes = {
   enabled: PropTypes.bool.isRequired,
   path: PropTypes.string.isRequired,
   redirectPath: PropTypes.string.isRequired,
-  component: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func,
-  ]).isRequired,
+  component: PropTypes.shape().isRequired,
 };
 
 export default ConditionalRoute;

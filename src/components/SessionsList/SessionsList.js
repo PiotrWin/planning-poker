@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import classes from './SessionsList.scss';
 
 const SessionsList = ({ sessions }) => (
-  <div>
-    <div>Sessions List</div>
-    <ul>
+  <div className={classes.ListWrapper}>
+    <ul className={classes.List}>
       {sessions.map(session => (
-        <li key={session.id}>{session.name}</li>
+        <li className={classes.ListItem} key={session.id}>
+          <Link to={`/my-sessions/session/${session.id}`}>{session.name}</Link>
+        </li>
       ))}
     </ul>
   </div>

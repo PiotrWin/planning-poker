@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { addSession } from 'store/actions/db';
 
 import Button from 'components/Button/Button';
+import Input from 'components/Input/Input';
+import Label from 'components/Label/Label';
+import classes from './NewSessionForm.scss';
 
 const NewSessionForm = ({ startNewSession }) => {
   const inputRef = useRef(null);
@@ -24,16 +27,23 @@ const NewSessionForm = ({ startNewSession }) => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        required
-        minLength={1}
-        maxLength={50}
-        value={value}
-        onChange={handleChange}
-        ref={inputRef}
-      />
+    <form
+      className={classes.Form}
+      onSubmit={handleSubmit}
+    >
+      <Label htmlFor="session-name">
+        <span>Enter the name of the session</span>
+        <Input
+          id="session-name"
+          type="text"
+          required
+          minLength={1}
+          maxLength={50}
+          value={value}
+          onChange={handleChange}
+          ref={inputRef}
+        />
+      </Label>
       <Button type="submit" onClick={handleSubmit}>Start</Button>
     </form>
   );

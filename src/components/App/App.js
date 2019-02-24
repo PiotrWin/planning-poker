@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
@@ -7,19 +7,18 @@ import { connect } from 'react-redux';
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
 
-import SignInView from 'views/SignIn/SignIn';
-import EstimateView from 'views/Estimate/Estimate';
-import MySessionsView from 'views/MySessions/MySessions';
-
 import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
-import classes from './App.scss';
-import './style.scss';
+import classes from 'components/App/App.scss';
 
-// const SignInView = lazy(() => import('views/SignIn/SignIn'));
-// const EstimateView = lazy(() => import('views/Estimate/Estimate'));
-// const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
+// import SignInView from 'views/SignIn/SignIn';
+// import EstimateView from 'views/Estimate/Estimate';
+// import MySessionsView from 'views/MySessions/MySessions';
+const SignInView = lazy(() => import('views/SignIn/SignIn'));
+const EstimateView = lazy(() => import('views/Estimate/Estimate'));
+const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
+const SessionView = lazy(() => import('views/Session/Session'));
 
 const app = ({ signedIn, initialized, onUserStateChanged }) => {
   useEffect(() => {
@@ -28,7 +27,7 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
   }, []);
 
   return (
-    <Fragment>
+    <React.Fragment>
       <div className={classes['u-background']} />
       <Navigation />
       <div className={classes['l-app-wrapper']}>
@@ -42,7 +41,14 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
             />
             <ConditionalRoute
               enabled={signedIn}
+              path="/my-sessions/session/:id"
+              redirectPath="/sign-in"
+              component={SessionView}
+            />
+            <ConditionalRoute
+              enabled={signedIn}
               path="/my-sessions"
+              // exact
               redirectPath="/sign-in"
               component={MySessionsView}
             />
@@ -57,7 +63,7 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
           ) : <Loader />
         }
       </div>
-    </Fragment>
+    </React.Fragment>
   );
 };
 

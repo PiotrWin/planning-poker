@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -27,7 +27,7 @@ const Navigation = ({ signedIn, displayName, onSignOut }) => (
     </div>
     <div className={`${classes.nav__sub} ${classes['nav__sub--right']}`}>
       {signedIn && (
-        <Fragment>
+        <React.Fragment>
           <div
             className={`${classes.nav__link} ${classes['nav__link--current-user']}`}
           >
@@ -39,7 +39,7 @@ const Navigation = ({ signedIn, displayName, onSignOut }) => (
           >
             Sign out
           </Button>
-        </Fragment>
+        </React.Fragment>
       )}
     </div>
   </nav>

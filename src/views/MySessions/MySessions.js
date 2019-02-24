@@ -18,7 +18,7 @@ const MySessionView = ({
 
   return loading ? <Loader /> : (
     <div>
-      <div>My sessions</div>
+      <h2>My sessions</h2>
       <SessionsList />
     </div>
   );

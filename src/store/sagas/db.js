@@ -24,7 +24,7 @@ export function* addSession({ sessionName }) {
       name: sessionName,
       created: Date.now(),
     });
-    history.push(`/my-sessions/${key}`);
+    history.push(`/my-sessions/session/${key}`);
   } catch (e) {
     // TODO: handle error
   }

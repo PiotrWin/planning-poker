@@ -25,6 +25,13 @@ module.exports = {
       'components': [ 'Link' ],
       'specialLink': [ 'to', 'hrefLeft', 'hrefRight' ],
       'aspects': [ 'noHref', 'invalidHref', 'preferButton' ]
+    }],
+    'jsx-a11y/label-has-for': [ 2, {
+      'components': [],
+      'required': {
+          'every': ['id']
+      },
+      'allowChildren': false
     }]
   },
 };

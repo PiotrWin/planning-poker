@@ -1,0 +1,19 @@
+@import '~shared/styles/index';
+
+.Input {
+  border: 1px solid $color-white;
+  color: $color-white;
+  padding: 10px 20px;
+  background: $color-background-dark;
+  border-radius: 20px;
+  outline: none;
+  transition: background 0.5s;
+
+  &:hover {
+    background: lighten($color-background-dark, 5%);
+  }
+
+  &:focus {
+    background: lighten($color-background-dark, 10%);
+  }
+}
