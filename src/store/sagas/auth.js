@@ -4,7 +4,7 @@ import { getUserData } from 'utils/helpers';
 import { setUser, initialized } from '../actions/auth';
 import { setUserPath } from '../actions/db';
 import { initialAuthFinished } from '../selectors';
-import { addUserToDb } from './db';
+import { addUser } from './db';
 
 export function* getCurrentUser() {
   // TODO: implement
@@ -14,7 +14,7 @@ export function* signInSaga() {
   try {
     const { additionalUserInfo, user } = yield auth.signInWithPopup(provider);
     if (additionalUserInfo.isNewUser) { // TODO: make it check for the user in db
-      yield fork(addUserToDb, getUserData(user));
+      yield fork(addUser, getUserData(user));
     }
   } catch (e) {
     // TODO: handle error

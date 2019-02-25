@@ -9,7 +9,7 @@ const SessionsList = ({ sessions }) => (
     <ul className={classes.List}>
       {sessions.map(session => (
         <li className={classes.ListItem} key={session.id}>
-          <Link to={`/my-sessions/session/${session.id}`}>{session.name}</Link>
+          <Link to={`/sessions/${session.id}`}>{session.name}</Link>
         </li>
       ))}
     </ul>

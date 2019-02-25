@@ -33,3 +33,14 @@ export const sessionsFetched = (items) => {
     sessions,
   };
 };
+
+export const joinSession = id => ({
+  type: actionTypes.DB_JOIN_SESSION,
+  id,
+});
+
+export const joinedSession = id => ({
+  type: actionTypes.DB_JOINED_SESSION,
+  id,
+});
+

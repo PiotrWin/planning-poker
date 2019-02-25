@@ -5,6 +5,7 @@ const initialState = {
   loading: true,
   initialFetchDone: false,
   userPath: '',
+  currentSession: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -30,6 +31,12 @@ const reducer = (state = initialState, action) => {
         sessions: action.sessions,
         loading: false,
         initialFetchDone: state.initialFetchDone || true,
+      };
+    }
+    case actionTypes.DB_JOINED_SESSION: {
+      return {
+        ...state,
+        currentSession: action.id,
       };
     }
     default: return state;

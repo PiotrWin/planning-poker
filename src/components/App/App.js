@@ -41,7 +41,7 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
             />
             <ConditionalRoute
               enabled={signedIn}
-              path="/my-sessions/session/:id"
+              path="/sessions/:id"
               redirectPath="/sign-in"
               component={SessionView}
             />

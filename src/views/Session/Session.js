@@ -4,25 +4,29 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { db } from 'fbase/firebase';
 
+import { joinSession as joinSessionAction } from 'store/actions/db';
+
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
 
-const SessionView = ({ match, userPath }) => {
+const SessionView = ({ match, userPath, joinSession }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
-  const [session, setSession] = useState({
-    name: 'Loading...',
-    created: 'Loading...',
-  });
+  const [session, setSession] = useState('');
   const { id } = match.params;
 
   const handleSessionChange = async (snapshot) => {
     try {
-      const sessionData = await snapshot.val();
+      let sessionData = await snapshot.val();
       if (!sessionData) {
-        throw new Error('404 - session not found');
+        const sessionRef = await db.ref(`/sessions/${id}`).once('value');
+        sessionData = await sessionRef.val();
+        if (!sessionData) {
+          throw new Error('404 - session not found');
+        }
       }
       setSession(sessionData);
+      joinSession(id);
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -33,6 +37,9 @@ const SessionView = ({ match, userPath }) => {
   useEffect(() => {
     const path = `${userPath}/sessions/${id}`;
     db.ref(path).on('value', handleSessionChange);
+
+    // db.ref(`/sessions/${id}`).onDisconnect();
+
     return () => db.ref(path).off('value', handleSessionChange);
   }, []);
 
@@ -62,10 +69,15 @@ SessionView.propTypes = {
     }),
   }).isRequired,
   userPath: PropTypes.string.isRequired,
+  joinSession: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
   userPath: state.db.userPath,
 });
 
-export default connect(mapState)(SessionView);
+const mapDispatch = dispatch => ({
+  joinSession: id => dispatch(joinSessionAction(id)),
+});
+
+export default connect(mapState, mapDispatch)(SessionView);

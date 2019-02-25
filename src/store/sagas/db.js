@@ -1,6 +1,6 @@
 import { db } from 'fbase/firebase';
 import { put, select } from 'redux-saga/effects';
-import { userPath } from 'store/selectors';
+import { userPath, userId } from 'store/selectors';
 import * as actions from 'store/actions/db';
 import history from 'utils/history';
 
@@ -16,15 +16,34 @@ export function* getSessions() {
   yield put(actions.sessionsFetched(items));
 }
 
+export function* joinSession({ id }) {
+  const uid = yield select(userId);
+  const clientsRef = yield db.ref((`/sessions/${id}/clients`));
+  const { committed } = yield clientsRef.transaction((currentUsers) => {
+    if (!currentUsers) return { [uid]: true };
+    return { ...currentUsers, [uid]: true };
+  }, (error) => {
+    if (error) {
+      throw new Error(error.toString());
+    }
+  });
+
+  if (committed) {
+    yield put(actions.joinedSession(id));
+  }
+}
+
 export function* addSession({ sessionName }) {
   const path = yield select(userPath);
   try {
-    const ref = yield db.ref(`${path}/sessions`);
-    const { key } = yield ref.push({
+    const userRef = yield db.ref(`${path}/sessions`);
+    const data = {
       name: sessionName,
       created: Date.now(),
-    });
-    history.push(`/my-sessions/session/${key}`);
+    };
+    const { key } = yield userRef.push({ ...data });
+    yield db.ref(`/sessions/${key}`).set({ ...data });
+    history.push(`/sessions/${key}`);
   } catch (e) {
     // TODO: handle error
   }
