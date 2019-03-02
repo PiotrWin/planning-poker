@@ -21,6 +21,7 @@ module.exports = {
     'react/jsx-filename-extension': [
       2, { extensions: ['.js'] },
     ],
+    'function-paren-newline': 0,
     'jsx-a11y/anchor-is-valid': [ 'error', {
       'components': [ 'Link' ],
       'specialLink': [ 'to', 'hrefLeft', 'hrefRight' ],

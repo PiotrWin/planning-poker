@@ -12,9 +12,6 @@ import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
 import classes from 'components/App/App.scss';
 
-// import SignInView from 'views/SignIn/SignIn';
-// import EstimateView from 'views/Estimate/Estimate';
-// import MySessionsView from 'views/MySessions/MySessions';
 const SignInView = lazy(() => import('views/SignIn/SignIn'));
 const EstimateView = lazy(() => import('views/Estimate/Estimate'));
 const MySessionsView = lazy(() => import('views/MySessions/MySessions'));

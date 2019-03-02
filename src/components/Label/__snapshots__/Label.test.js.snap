@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`label matches snapshot 1`] = `
+<label
+  class="label"
+  for="test"
+  data-testid="label"
+>
+  Label
+</label>
+`;

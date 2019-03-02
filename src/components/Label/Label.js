@@ -8,6 +8,7 @@ const Label = ({ htmlFor, children, ...props }) => (
     className={classes.Label}
     {...props}
     htmlFor={htmlFor}
+    data-testid="label"
   >
     {children}
   </label>

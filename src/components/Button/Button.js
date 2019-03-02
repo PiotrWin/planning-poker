@@ -9,6 +9,7 @@ const Button = ({
     {...rest}
     className={className ? `${className} button` : 'button'}
     onClick={onClick}
+    data-testid="btn"
   >
     {children}
   </button>
