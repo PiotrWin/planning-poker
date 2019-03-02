@@ -1,0 +1,15 @@
+export default {
+  fontSizeXS: '1rem',
+  fontSizeS: '1.5rem',
+  fontSizeM: '2rem',
+  fontSizeL: '2.5rem',
+  fontSizeXL: '4rem',
+  fontPrimary: '"Montserrat", sans-serif',
+  fontSecondary: '"Lato", sans-serif',
+  fontWeightLight: 300,
+  fontWeightRegular: 400,
+  fontWeightSemiBold: 600,
+  fontWeightBold: 700,
+  colorWhite: '#fff',
+  colorDarkGrey: '#1a1a1a',
+};
