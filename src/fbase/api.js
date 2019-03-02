@@ -1,27 +1,49 @@
+import store from 'store/store';
 import { auth, db, provider } from './firebase';
+
+const userPath = id => `/users/${id}`;
+const sessionsPath = () => '/sessions';
+const sessionPath = id => `${sessionsPath()}/${id}`;
 
 export const signIn = () => auth.signInWithPopup(provider);
 export const signOut = () => auth.signOut();
-export const set = (path, val) => db.ref(path).set(val);
-export const get = async (path) => {
-  const response = await db.ref(path).once('value');
+
+export const getSessions = async () => {
+  const { uid } = store.getState().auth;
+  const ref = await db.ref(`${userPath(uid)}/sessions`);
+  const response = await ref.once('value');
   return response.val();
 };
-export const add = (path, item) => db.ref(path).push(item);
-export const addListener = (path, callback, event = 'value') => {
-  db.ref(path).on(event, callback);
-};
-export const removeListener = (path, callback, event = 'value') => {
-  db.ref(path).off(event, callback);
+
+// export const getSession = async (id) => {
+
+// }
+
+export const joinSession = async (id) => {
+  const { uid } = store.getState().auth;
+  const clientsRef = await db.ref((`${sessionPath(id)}/clients`));
+  const { committed } = await clientsRef.transaction((currentUsers) => {
+    if (!currentUsers) return { [uid]: true };
+    return { ...currentUsers, [uid]: true };
+  }, (error) => {
+    if (error) {
+      throw new Error(error.toString());
+    }
+  });
+
+  return committed;
 };
 
-export default {
-  set,
-  get,
-  add,
-  signIn,
-  signOut,
-  addListener,
-  removeListener,
+export const leaveSession = async (id) => {
+  const { uid } = store.getState().auth;
+  await db.ref(`${sessionPath(id)}/clients`).update({
+    [uid]: false,
+  });
 };
 
+export const leaveSessionOnDisconnect = async (id) => {
+  const { uid } = store.getState().auth;
+  db.ref(`${sessionPath(id)}/clients`).onDisconnect().update({
+    [uid]: false,
+  });
+};

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import { db } from 'fbase/firebase';
-
-import { joinSession as joinSessionAction } from 'store/actions/db';
+import * as api from 'fbase/api';
 
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
 
-const SessionView = ({ match, userPath, joinSession }) => {
+const SessionView = ({ match }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const [session, setSession] = useState('');
@@ -26,7 +24,6 @@ const SessionView = ({ match, userPath, joinSession }) => {
         }
       }
       setSession(sessionData);
-      joinSession(id);
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -35,12 +32,14 @@ const SessionView = ({ match, userPath, joinSession }) => {
   };
 
   useEffect(() => {
-    const path = `${userPath}/sessions/${id}`;
+    const path = `/sessions/${id}`;
     db.ref(path).on('value', handleSessionChange);
-
-    // db.ref(`/sessions/${id}`).onDisconnect();
-
-    return () => db.ref(path).off('value', handleSessionChange);
+    api.joinSession(id);
+    api.leaveSessionOnDisconnect(id);
+    return () => {
+      db.ref(path).off('value', handleSessionChange);
+      api.leaveSession(id);
+    };
   }, []);
 
   const errorComponent = (
@@ -56,6 +55,9 @@ const SessionView = ({ match, userPath, joinSession }) => {
       <span>
         {moment(session.created).format('dddd, MMMM Do YYYY, h:mm A')}
       </span>
+      <div>
+        {JSON.stringify(session.clients, null, 2)}
+      </div>
     </React.Fragment>
   ));
 
@@ -68,16 +70,6 @@ SessionView.propTypes = {
       id: PropTypes.string,
     }),
   }).isRequired,
-  userPath: PropTypes.string.isRequired,
-  joinSession: PropTypes.func.isRequired,
 };
 
-const mapState = state => ({
-  userPath: state.db.userPath,
-});
-
-const mapDispatch = dispatch => ({
-  joinSession: id => dispatch(joinSessionAction(id)),
-});
-
-export default connect(mapState, mapDispatch)(SessionView);
+export default SessionView;
