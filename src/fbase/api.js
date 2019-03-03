@@ -2,18 +2,34 @@ import store from 'store/store';
 import { auth, db, provider } from './firebase';
 
 const userPath = id => `/users/${id}`;
-const userSessionsPath = id => `/users/${id}/sessions`;
 const sessionsPath = () => '/sessions';
 const sessionPath = id => `${sessionsPath()}/${id}`;
 
 export const signIn = () => auth.signInWithPopup(provider);
+
 export const signOut = () => auth.signOut();
+
+export const addUser = user =>
+  db.ref(userPath(user.id)).set(user);
 
 export const getSessions = async () => {
   const { uid } = store.getState().auth;
   const ref = await db.ref(`${userPath(uid)}/sessions`);
   const response = await ref.once('value');
   return response.val();
+};
+
+export const addSession = async (name) => {
+  const { uid } = store.getState().auth;
+  const data = {
+    name,
+    created: Date.now(),
+  };
+  const ref = await db.ref(`${userPath(uid)}/sessions`);
+  const { key: id } = await ref.push(data);
+  await db.ref(`sessions/${id}`).set(data);
+  return id;
+  // TODO: handle error
 };
 
 export const subscribeToSessions = async (callback) => {
@@ -40,6 +56,12 @@ export const joinSession = async (id) => {
       throw new Error(error.toString());
     }
   });
+
+  if (committed) {
+    clientsRef.onDisconnect().update({
+      [uid]: false,
+    });
+  }
   return committed;
 };
 
@@ -67,6 +89,7 @@ export default {
   auth: {
     signIn,
     signOut,
+    addUser,
   },
   sessions: {
     get: getSessions,
@@ -77,8 +100,8 @@ export default {
     get: getSession,
     join: joinSession,
     leave: leaveSession,
-    leaveOnDisconnect: leaveSessionOnDisconnect,
     subscribe: subscribeToSession,
     unsubscribe: unsubscribeFromSession,
+    add: addSession,
   },
 };

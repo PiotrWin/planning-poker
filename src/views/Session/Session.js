@@ -34,7 +34,6 @@ const SessionView = ({ match }) => {
 
   useEffect(() => {
     api.session.subscribe(id, handleSessionChange);
-    api.session.leaveOnDisconnect(id);
     return () => {
       api.session.unsubscribe(id, handleSessionChange);
       api.session.leave(id);
