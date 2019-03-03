@@ -7,12 +7,12 @@ import Button from 'components/Button/Button';
 import classes from './SignIn.scss';
 
 const SignInView = ({ onSignIn }) => (
-  <div className={classes.signIn}>
+  <main className={classes.signIn}>
     <h1>Planning Poker</h1>
     <span>Plan your sprints easily!</span>
     <Button onClick={onSignIn}>Sign in</Button>
     <span>to get started!</span>
-  </div>
+  </main>
 );
 
 SignInView.propTypes = {

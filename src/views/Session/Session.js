@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { db } from 'fbase/firebase';
-import * as api from 'fbase/api';
+import api from 'fbase/api';
 
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
+import ClientList from 'components/ClientList/ClientList';
 
 const SessionView = ({ match }) => {
   const [loading, setLoading] = useState(true);
@@ -17,12 +17,13 @@ const SessionView = ({ match }) => {
     try {
       let sessionData = await snapshot.val();
       if (!sessionData) {
-        const sessionRef = await db.ref(`/sessions/${id}`).once('value');
-        sessionData = await sessionRef.val();
+        const sessionSnap = await api.session.get(id);
+        sessionData = await sessionSnap.val();
         if (!sessionData) {
           throw new Error('404 - session not found');
         }
       }
+      api.session.join(id);
       setSession(sessionData);
     } catch (e) {
       setError(e.toString());
@@ -32,13 +33,11 @@ const SessionView = ({ match }) => {
   };
 
   useEffect(() => {
-    const path = `/sessions/${id}`;
-    db.ref(path).on('value', handleSessionChange);
-    api.joinSession(id);
-    api.leaveSessionOnDisconnect(id);
+    api.session.subscribe(id, handleSessionChange);
+    api.session.leaveOnDisconnect(id);
     return () => {
-      db.ref(path).off('value', handleSessionChange);
-      api.leaveSession(id);
+      api.session.unsubscribe(id, handleSessionChange);
+      api.session.leave(id);
     };
   }, []);
 
@@ -50,14 +49,17 @@ const SessionView = ({ match }) => {
   );
   const component = (loading ? <Loader /> : (
     <React.Fragment>
-      <h2>{session.name}</h2>
-      <span>Created:{' '}</span>
-      <span>
-        {moment(session.created).format('dddd, MMMM Do YYYY, h:mm A')}
-      </span>
-      <div>
-        {JSON.stringify(session.clients, null, 2)}
-      </div>
+      <ClientList clients={session.clients} />
+      <main>
+        <h2>{session.name}</h2>
+        <span>Created:{' '}</span>
+        <span>
+          {moment(session.created).format('dddd, MMMM Do YYYY, h:mm A')}
+        </span>
+        <div>
+          {JSON.stringify(session.clients, null, 2)}
+        </div>
+      </main>
     </React.Fragment>
   ));
 

@@ -1,7 +1,9 @@
 import React from 'react';
 
 const About = () => (
-  <div>About view</div>
+  <main>
+    <div>About view</div>
+  </main>
 );
 
 export default About;
