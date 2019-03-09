@@ -24,12 +24,25 @@ export const addSession = async (name) => {
   const data = {
     name,
     created: Date.now(),
+    createdBy: uid,
   };
   const ref = await db.ref(`${userPath(uid)}/sessions`);
   const { key: id } = await ref.push(data);
   await db.ref(`sessions/${id}`).set(data);
   return id;
   // TODO: handle error
+};
+
+export const storeSession = async (id) => {
+  const { uid } = store.getState().auth;
+  const session = await db.ref(`${sessionPath(id)}`).once('value');
+  const { name, created, createdBy } = await session.val();
+
+  await db.ref(`${userPath(uid)}/sessions/${id}`).set({
+    name,
+    created,
+    createdBy,
+  });
 };
 
 export const subscribeToSessions = async (callback) => {
@@ -47,7 +60,7 @@ export const getSession = async id =>
 
 export const joinSession = async (id) => {
   const { uid } = store.getState().auth;
-  const clientsRef = await db.ref((`${sessionPath(id)}/clients`));
+  const clientsRef = await db.ref(`${sessionPath(id)}/clients`);
   const { committed } = await clientsRef.transaction((users) => {
     if (!users) return { [uid]: true };
     return { ...users, [uid]: true };
@@ -61,6 +74,12 @@ export const joinSession = async (id) => {
     clientsRef.onDisconnect().update({
       [uid]: false,
     });
+
+    const sessions = await db.ref(`${userPath(uid)}/sessions`).once('value');
+    const sessionsData = await sessions.val();
+    if (!Object.keys(sessionsData).includes(id)) {
+      storeSession(id);
+    }
   }
   return committed;
 };
@@ -73,9 +92,23 @@ export const unsubscribeFromSession = async (id, callback) =>
 
 export const leaveSession = async (id) => {
   const { uid } = store.getState().auth;
-  await db.ref(`${sessionPath(id)}/clients`).update({
-    [uid]: false,
-  });
+
+  await db.ref(`${sessionPath(id)}`).transaction((session) => {
+    if (session === null) {
+      return null;
+    }
+    return {
+      ...session,
+      clients: {
+        ...session.clients,
+        [uid]: false,
+      },
+    };
+  }, (error) => {
+    if (error) {
+      throw new Error(error.toString());
+    }
+  }, true);
 };
 
 export const leaveSessionOnDisconnect = async (id) => {
@@ -83,6 +116,11 @@ export const leaveSessionOnDisconnect = async (id) => {
   db.ref(`${sessionPath(id)}/clients`).onDisconnect().update({
     [uid]: false,
   });
+};
+
+export const removeSession = async (id) => {
+  const { uid } = store.getState().auth;
+  await db.ref(`${userPath(uid)}/sessions/${id}`).remove();
 };
 
 export default {
@@ -103,5 +141,6 @@ export default {
     subscribe: subscribeToSession,
     unsubscribe: unsubscribeFromSession,
     add: addSession,
+    remove: removeSession,
   },
 };

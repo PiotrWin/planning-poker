@@ -19,6 +19,11 @@
     width: 80%;
     cursor: pointer;
     transition: background 0.5s;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 
     &:first-of-type {
       border-top-left-radius: 20px;
@@ -51,6 +56,28 @@
       &:visited {
         color: $color-white;
       }
+    }
+  }
+
+  .ButtonRemove {
+    position: absolute;
+    right: 0;
+    border: 0;
+    transition: 0.2s background-color;
+    background: transparent;
+    padding: 6px 20px;
+    border-left: 1px solid $color-white;
+    border-radius: 0;
+    top: -2px;
+
+    &:hover {
+      transform: none;
+      background-color: rgba($color-white, 0.3);
+    }
+
+    &:active {
+      transform: none;
+      background-color: rgba($color-white, 0.5);
     }
   }
 }

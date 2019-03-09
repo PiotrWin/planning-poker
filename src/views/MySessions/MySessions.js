@@ -9,6 +9,8 @@ import Loader from 'components/Loader/Loader';
 const MySessionView = ({
   loading,
   onSessionsFetched,
+  sessions,
+  uid,
 }) => {
   useEffect(() => {
     api.sessions.subscribe(onSessionsFetched);
@@ -17,8 +19,14 @@ const MySessionView = ({
 
   return loading ? <Loader /> : (
     <main>
-      <h2>My sessions</h2>
-      <SessionsList />
+      <SessionsList
+        title="Created by me:"
+        sessions={sessions.filter(s => s.createdBy === uid)}
+      />
+      <SessionsList
+        title="Created by others:"
+        sessions={sessions.filter(s => s.createdBy !== uid)}
+      />
     </main>
   );
 };
@@ -26,10 +34,14 @@ const MySessionView = ({
 MySessionView.propTypes = {
   loading: PropTypes.bool.isRequired,
   onSessionsFetched: PropTypes.func.isRequired,
+  sessions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  uid: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({
   loading: state.db.loading,
+  sessions: state.db.sessions,
+  uid: state.auth.uid,
 });
 
 const mapDispatch = dispatch => ({
