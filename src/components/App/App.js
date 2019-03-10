@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
@@ -17,9 +19,17 @@ const EstimateView = lazy(() => import('views/Estimate/Estimate'));
 const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
 const SessionView = lazy(() => import('views/Session/Session'));
 
-const app = ({ signedIn, initialized, onUserStateChanged }) => {
+const App = ({
+  signedIn, initialized, onUserStateChanged, authenticateGoogleUser,
+}) => {
   useEffect(() => {
-    auth.onAuthStateChanged(onUserStateChanged);
+    auth.onAuthStateChanged(async (data) => {
+      const token = await auth.currentUser.getIdToken();
+      console.log(token);
+      // const response = await authenticateGoogleUser({ variables: { googleToken: token } });
+      // console.log(response);
+      onUserStateChanged(data);
+    });
     return () => auth.onAuthStateChanged(null);
   }, []);
 
@@ -64,10 +74,11 @@ const app = ({ signedIn, initialized, onUserStateChanged }) => {
   );
 };
 
-app.propTypes = {
+App.propTypes = {
   signedIn: PropTypes.bool.isRequired,
   initialized: PropTypes.bool.isRequired,
   onUserStateChanged: PropTypes.func.isRequired,
+  authenticateGoogleUser: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -79,10 +90,23 @@ const mapDispatch = dispatch => ({
   onUserStateChanged: user => dispatch(userStateChanged(user)),
 });
 
-export { app as AppUnwrapped };
+const AUTHENTICATE_USER_MUTATION = gql`
+  mutation authenticateGoogleUserMutation($googleToken: String!) {
+    authenticateGoogleUser(googleToken: $googleToken) {
+      id
+      token
+    }
+  }
+`;
+
+const AppWithGql = graphql(AUTHENTICATE_USER_MUTATION, {
+  name: 'authenticateGoogleUser',
+})(App);
+
+export { App as AppUnwrapped };
 export default hot(module)(connect(
   mapState,
   mapDispatch,
   null,
   { pure: false },
-)(app));
+)(AppWithGql));

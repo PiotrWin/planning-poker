@@ -29,10 +29,10 @@ export function* stateChangedSaga({ user }) {
   if (user) {
     const userData = getUserData(user);
     yield put(setUser(userData));
-    yield put(setUserPath(userData.uid));
   }
   const isInitialized = yield select(initialAuthFinished);
   if (!isInitialized) {
     yield put(initialized());
   }
 }
+

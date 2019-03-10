@@ -1,0 +1,29 @@
+types: ./types.graphql
+
+functions:
+
+# added by google template: (please uncomment)
+# 
+  googleAuthentication:
+    handler:
+      code:
+        src: ./src/google/googleAuthentication.ts
+    type: resolver
+    schema: ./src/google/googleAuthentication.graphql
+  loggedInUser:
+    handler:
+      code:
+        src: ./src/google/loggedInUser.ts
+    type: resolver
+    schema: ./src/google/loggedInUser.graphql
+
+permissions:
+  - operation: "*"
+
+
+# Your root tokens used for functions to get full access to the API
+# Read more here:
+# https://www.graph.cool/docs/reference/auth/authentication/authentication-tokens-eip7ahqu5o
+# rootTokens:
+#   - mytoken
+
