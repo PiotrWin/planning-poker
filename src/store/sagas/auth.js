@@ -2,7 +2,6 @@ import { put, fork, select } from 'redux-saga/effects';
 import { auth, provider } from 'fbase/firebase';
 import { getUserData } from 'utils/helpers';
 import { setUser, initialized } from '../actions/auth';
-import { setUserPath } from '../actions/db';
 import { initialAuthFinished } from '../selectors';
 import { addUser } from './db';
 

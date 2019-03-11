@@ -1,7 +1,7 @@
 export const getUserData = user => ({
   displayName: user.displayName,
   email: user.email,
-  uid: user.uid,
+  id: user.id,
 });
 
 export default getUserData;

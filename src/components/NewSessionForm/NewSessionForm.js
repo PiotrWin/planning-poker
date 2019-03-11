@@ -1,21 +1,30 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addSession } from 'store/actions/db';
+// import { addSession } from 'store/actions/db';
+
+import { graphql } from 'react-apollo';
+import { createSessionMutation } from 'graphql/mutations';
 
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import classes from './NewSessionForm.scss';
 
-const NewSessionForm = ({ startNewSession }) => {
+const NewSessionForm = ({ id, createNewSession }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (value.length) {
-      startNewSession(value);
+      const response = await createNewSession({
+        variables: {
+          name: value,
+          createdById: id,
+        },
+      });
+      console.log(response);
       setValue('');
     }
   };
@@ -50,12 +59,16 @@ const NewSessionForm = ({ startNewSession }) => {
 };
 
 NewSessionForm.propTypes = {
-  startNewSession: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  createNewSession: PropTypes.func.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-  startNewSession:
-    (sessionName, history) => dispatch(addSession(sessionName, history)),
+const mapState = state => ({
+  id: state.auth.id,
 });
 
-export default connect(null, mapDispatch)(NewSessionForm);
+const FormWithGql = graphql(createSessionMutation, {
+  name: 'createNewSession',
+})(NewSessionForm);
+
+export default connect(mapState)(FormWithGql);

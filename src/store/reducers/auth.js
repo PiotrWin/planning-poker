@@ -3,7 +3,7 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   displayName: '',
   email: '',
-  uid: '',
+  id: '',
   signedIn: false,
   initialAuthFinished: false,
 };

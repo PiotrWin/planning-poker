@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
 import { userStateChanged } from 'store/actions/auth';
@@ -13,13 +12,14 @@ import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
 import classes from 'components/App/App.scss';
+import { authenticateUserMutation } from 'graphql/mutations';
 
 const SignInView = lazy(() => import('views/SignIn/SignIn'));
 const EstimateView = lazy(() => import('views/Estimate/Estimate'));
 const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
 const SessionView = lazy(() => import('views/Session/Session'));
 
-const App = ({
+export const App = ({
   signedIn, initialized, onUserStateChanged, authenticateGoogleUser,
 }) => {
   useEffect(() => {
@@ -33,9 +33,10 @@ const App = ({
             email: data.email,
           },
         });
-        console.log(response);
+        onUserStateChanged(response.data.authenticateGoogleUser);
+      } else {
+        onUserStateChanged(null);
       }
-      onUserStateChanged(data);
     });
     return () => auth.onAuthStateChanged(null);
   }, []);
@@ -97,29 +98,11 @@ const mapDispatch = dispatch => ({
   onUserStateChanged: user => dispatch(userStateChanged(user)),
 });
 
-const AUTHENTICATE_USER_MUTATION = gql`
-  mutation authenticateGoogleUserMutation(
-    $googleToken: String!,
-    $displayName: String!,
-    $email: String!
-  ) {
-    authenticateGoogleUser(
-      googleToken: $googleToken,
-      displayName: $displayName,
-      email: $email
-    ) {
-        id
-        displayName
-        email
-    }
-  }
-`;
 
-const AppWithGql = graphql(AUTHENTICATE_USER_MUTATION, {
+const AppWithGql = graphql(authenticateUserMutation, {
   name: 'authenticateGoogleUser',
 })(App);
 
-export { App as AppUnwrapped };
 export default hot(module)(connect(
   mapState,
   mapDispatch,

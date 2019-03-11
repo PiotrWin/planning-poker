@@ -10,7 +10,7 @@ const MySessionView = ({
   loading,
   onSessionsFetched,
   sessions,
-  uid,
+  id,
 }) => {
   useEffect(() => {
     api.sessions.subscribe(onSessionsFetched);
@@ -21,11 +21,11 @@ const MySessionView = ({
     <main>
       <SessionsList
         title="Created by me:"
-        sessions={sessions.filter(s => s.createdBy === uid)}
+        sessions={sessions.filter(s => s.createdBy === id)}
       />
       <SessionsList
         title="Created by others:"
-        sessions={sessions.filter(s => s.createdBy !== uid)}
+        sessions={sessions.filter(s => s.createdBy !== id)}
       />
     </main>
   );
@@ -35,13 +35,13 @@ MySessionView.propTypes = {
   loading: PropTypes.bool.isRequired,
   onSessionsFetched: PropTypes.func.isRequired,
   sessions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  uid: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({
   loading: state.db.loading,
   sessions: state.db.sessions,
-  uid: state.auth.uid,
+  id: state.auth.id,
 });
 
 const mapDispatch = dispatch => ({

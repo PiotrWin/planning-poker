@@ -3,32 +3,21 @@ type User @model {
   displayName: String!
   email: String! @isUnique
   googleUserId: String! @isUnique
+
   createdAt: DateTime!
   updatedAt: DateTime!
-  # ownSessions: [Session!]! @relation(name: "UserSessions")
-  # visitedSessions: [Session!]! @relation(name: "VisitedSessions")
+
+  ownSessions: [Session!]! @relation(name: "UserSessions")
+  visitedSessions: [Session!]! @relation(name: "VisitedSessions")
 }
 
-# type Session @model {
-#   id: ID! @isUnique
-#   name: String!
-#   createdAt: DateTime!
-#   updatedAt: DateTime!
-#   createdBy: User! @relation(name: "UserSessions")
-#   clients: [User!]! @relation(name: "VisitedSessions")
-# }
+type Session @model {
+  id: ID! @isUnique
+  name: String!
 
+  createdAt: DateTime!
+  updatedAt: DateTime!
 
-# added by google template: (please uncomment)
-# type User @model {
-#   # Required system field:
-#   id: ID! @isUnique # read-only (managed by Graphcool)
-# 
-#   # Optional system fields (remove if not needed):
-#   createdAt: DateTime! # read-only (managed by Graphcool)
-#   updatedAt: DateTime! # read-only (managed by Graphcool)
-# 
-#   googleUserId: String @isUnique
-# }
-# 
-
+  createdBy: User! @relation(name: "UserSessions")
+  clients: [User!]! @relation(name: "VisitedSessions")
+}
