@@ -7,13 +7,13 @@ functions:
   googleAuthentication:
     handler:
       code:
-        src: ./src/google/googleAuthentication.ts
+        src: ./src/google/googleAuthentication.js
     type: resolver
     schema: ./src/google/googleAuthentication.graphql
   loggedInUser:
     handler:
       code:
-        src: ./src/google/loggedInUser.ts
+        src: ./src/google/loggedInUser.js
     type: resolver
     schema: ./src/google/loggedInUser.graphql
 

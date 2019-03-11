@@ -1,8 +1,13 @@
 type AuthenticateGoogleUserPayload {
   id: ID!
   displayName: String!
+  email: String!
 }
 
 extend type Mutation {
-  authenticateGoogleUser(googleToken: String!, displayName: String!): AuthenticateGoogleUserPayload!
+  authenticateGoogleUser(
+    googleToken: String!,
+    displayName: String!,
+    email: String!
+  ): AuthenticateGoogleUserPayload!
 }

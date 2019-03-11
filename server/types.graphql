@@ -1,17 +1,12 @@
-# type User @model {
-#   id: ID! @isUnique
-#   name: String!
-#   email: String!
-#   createdAt: DateTime!
-#   updatedAt: DateTime!
-#   ownSessions: [Session!]! @relation(name: "UserSessions")
-#   visitedSessions: [Session!]! @relation(name: "VisitedSessions")
-# }
-
 type User @model {
   id: ID! @isUnique
   displayName: String!
+  email: String! @isUnique
   googleUserId: String! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  # ownSessions: [Session!]! @relation(name: "UserSessions")
+  # visitedSessions: [Session!]! @relation(name: "VisitedSessions")
 }
 
 # type Session @model {

@@ -24,17 +24,18 @@ const App = ({
 }) => {
   useEffect(() => {
     auth.onAuthStateChanged(async (data) => {
-      if (data.displayName) {
+      if (data) {
         const token = await auth.currentUser.getIdToken();
         const response = await authenticateGoogleUser({
           variables: {
             googleToken: token,
             displayName: data.displayName,
+            email: data.email,
           },
         });
         console.log(response);
-        onUserStateChanged(data);
       }
+      onUserStateChanged(data);
     });
     return () => auth.onAuthStateChanged(null);
   }, []);
@@ -97,10 +98,19 @@ const mapDispatch = dispatch => ({
 });
 
 const AUTHENTICATE_USER_MUTATION = gql`
-  mutation authenticateGoogleUserMutation($googleToken: String!, $displayName: String!) {
-    authenticateGoogleUser(googleToken: $googleToken, displayName: $displayName) {
-      id
-      displayName
+  mutation authenticateGoogleUserMutation(
+    $googleToken: String!,
+    $displayName: String!,
+    $email: String!
+  ) {
+    authenticateGoogleUser(
+      googleToken: $googleToken,
+      displayName: $displayName,
+      email: $email
+    ) {
+        id
+        displayName
+        email
     }
   }
 `;
