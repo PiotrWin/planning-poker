@@ -10,8 +10,8 @@
 
 type User @model {
   id: ID! @isUnique
-
-  googleUserId: String @isUnique
+  displayName: String!
+  googleUserId: String! @isUnique
 }
 
 # type Session @model {

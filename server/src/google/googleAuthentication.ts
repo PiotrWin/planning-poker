@@ -1,6 +1,8 @@
 import { fromEvent, FunctionEvent } from 'graphcool-lib'
 import { GraphQLClient } from 'graphql-request'
 import * as fetch from 'isomorphic-fetch'
+import admin from 'firebase-admin';
+import serviceAccount from './serviceAccountKey';
 
 interface User {
   id: string
@@ -13,29 +15,35 @@ interface GoogleUser {
 
 interface EventData {
   googleToken: string
+  displayName: string
 }
 
-export default async (event: FunctionEvent<EventData>) => {
-  console.log(event)
+(async () => {
+    await admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://planning-poker-1d012.firebaseio.com',
+  })
+})();
 
+export default async (event: FunctionEvent<EventData>) => {
   try {
     const graphcool = fromEvent(event)
     const api = graphcool.api('simple/v1')
 
-    const { googleToken } = event.data
+    const { googleToken, displayName } = event.data
 
     // call google API to obtain user data
-    const googleUser = await getGoogleUser(googleToken)
+    const googleUserId = await getGoogleUser(googleToken)
     
     // get graphcool user by google id
-    const user: User = await getGraphcoolUser(api, googleUser.sub)
+    const user: User = await getGraphcoolUser(api, googleUserId)
       .then(r => r.User)
 
     // check if graphcool user exists, and create new one if not
     let userId: string | null = null
 
     if (!user) {
-      userId = await createGraphcoolUser(api, googleUser.sub)
+      userId = await createGraphcoolUser(api, googleUserId, displayName)
     } else {
       userId = user.id
     }
@@ -43,7 +51,7 @@ export default async (event: FunctionEvent<EventData>) => {
     // generate node token for User node
     const token = await graphcool.generateAuthToken(userId!, 'User')
 
-    return { data: { id: userId, token} }
+    return { data: { id: userId, token, displayName } }
   } catch (e) {
     console.log(e)
     return { error: e.toString() }
@@ -51,15 +59,12 @@ export default async (event: FunctionEvent<EventData>) => {
 }
 
 async function getGoogleUser(googleToken: string): Promise<GoogleUser> {
-  const endpoint = `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${googleToken}`
-  const data = await fetch(endpoint)
-    .then(response => response.json())
-
-  if (data.error_description) {
-    throw new Error(data.error_description)
+  try {
+    const resp = await admin.auth().verifyIdToken(googleToken);
+    return resp.uid;
+  } catch(e) {
+    throw new Error(e);
   }
-
-  return data
 }
 
 async function getGraphcoolUser(api: GraphQLClient, googleUserId: string): Promise<{ User }> {
@@ -78,19 +83,26 @@ async function getGraphcoolUser(api: GraphQLClient, googleUserId: string): Promi
   return api.request<{ User }>(query, variables)
 }
 
-async function createGraphcoolUser(api: GraphQLClient, googleUserId: string): Promise<string> {
+async function createGraphcoolUser(
+  api: GraphQLClient,
+  googleUserId: string,
+  displayName: string,
+): Promise<string> {
   const mutation = `
-    mutation createUser($googleUserId: String!) {
+    mutation createUser($googleUserId: String!, $displayName: String!) {
       createUser(
-        googleUserId: $googleUserId
+        googleUserId: $googleUserId,
+        displayName: $displayName
       ) {
         id
+        displayName
       }
     }
   `
 
   const variables = {
     googleUserId,
+    displayName,
   }
 
   return api.request<{ createUser: User }>(mutation, variables)
