@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
-export const getUserQuery = gql`
-  query getUser($id: ID!) {
+export const getUser = gql`
+  query ($id: ID!) {
     User(id: $id) {
       id
       displayName
@@ -12,8 +12,8 @@ export const getUserQuery = gql`
   }
 `;
 
-export const getSessionQuery = gql`
-  query getSession($id: ID!) {
+export const getSession = gql`
+  query ($id: ID!) {
     Session(id: $id) {
       name
       createdAt
@@ -25,6 +25,31 @@ export const getSessionQuery = gql`
       }
       _clientsMeta {
         count
+      }
+    }
+  }
+`;
+
+export const getSessions = gql`
+  query ($id: ID!) {
+    User(id: $id) {
+      ownSessions {
+        id
+        name
+        createdAt
+        createdBy {
+          id
+          displayName
+        }
+      }
+      visitedSessions {
+        id
+        name
+        createdAt
+        createdBy {
+          id
+          displayName
+        }
       }
     }
   }

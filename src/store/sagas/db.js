@@ -4,10 +4,6 @@ import history from 'utils/history';
 
 import api from 'fbase/api';
 
-export function* addUser(user) {
-  yield api.auth.addUser(user);
-}
-
 export function* getSessions() {
   const items = yield api.sessions.get();
   yield put(actions.sessionsFetched(items));

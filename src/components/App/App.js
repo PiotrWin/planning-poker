@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { graphql } from 'react-apollo';
+import { useMutation } from 'react-apollo-hooks';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
@@ -12,7 +12,7 @@ import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
 import classes from 'components/App/App.scss';
-import { authenticateUserMutation } from 'graphql/mutations';
+import { authenticateUser } from 'graphql/mutations';
 
 const SignInView = lazy(() => import('views/SignIn/SignIn'));
 const EstimateView = lazy(() => import('views/Estimate/Estimate'));
@@ -20,13 +20,15 @@ const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
 const SessionView = lazy(() => import('views/Session/Session'));
 
 export const App = ({
-  signedIn, initialized, onUserStateChanged, authenticateGoogleUser,
+  signedIn, initialized, onUserStateChanged,
 }) => {
+  const authenticate = useMutation(authenticateUser);
+
   useEffect(() => {
     auth.onAuthStateChanged(async (data) => {
       if (data) {
         const token = await auth.currentUser.getIdToken();
-        const response = await authenticateGoogleUser({
+        const response = await authenticate({
           variables: {
             googleToken: token,
             displayName: data.displayName,
@@ -86,7 +88,6 @@ App.propTypes = {
   signedIn: PropTypes.bool.isRequired,
   initialized: PropTypes.bool.isRequired,
   onUserStateChanged: PropTypes.func.isRequired,
-  authenticateGoogleUser: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -99,13 +100,9 @@ const mapDispatch = dispatch => ({
 });
 
 
-const AppWithGql = graphql(authenticateUserMutation, {
-  name: 'authenticateGoogleUser',
-})(App);
-
 export default hot(module)(connect(
   mapState,
   mapDispatch,
   null,
   { pure: false },
-)(AppWithGql));
+)(App));

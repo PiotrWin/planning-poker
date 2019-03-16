@@ -26,6 +26,7 @@ const reducer = (state = initialState, action) => {
       };
     }
     case actionTypes.DB_SESSIONS_FETCHED: {
+      console.log(action.sessions);
       return {
         ...state,
         sessions: action.sessions,

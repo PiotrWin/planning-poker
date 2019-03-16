@@ -1,51 +1,51 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import api from 'fbase/api';
-import { sessionsFetched } from 'store/actions/db';
+
+import { useQuery } from 'react-apollo-hooks';
+import { getSessions } from 'graphql/queries';
+
 import SessionsList from 'components/SessionsList/SessionsList';
 import Loader from 'components/Loader/Loader';
 
-const MySessionView = ({
-  loading,
-  onSessionsFetched,
-  sessions,
-  id,
-}) => {
+const MySessionsView = ({ id }) => {
+  const [ownSessions, setOwnSessions] = useState([]);
+  const [visitedSessions, setVisitedSessions] = useState([]);
+  const { loading, data } = useQuery(getSessions, { variables: { id } });
+
   useEffect(() => {
-    api.sessions.subscribe(onSessionsFetched);
-    return () => api.sessions.unsubscribe(onSessionsFetched);
+    // api.sessions.subscribe(onSessionsFetched);
+    // return () => api.sessions.unsubscribe(onSessionsFetched);
   }, []);
+
+  useEffect(() => {
+    const { User } = data;
+    if (User) {
+      setOwnSessions([...User.ownSessions]);
+      setVisitedSessions([...User.visitedSessions]);
+    }
+  }, [data]);
 
   return loading ? <Loader /> : (
     <main>
       <SessionsList
         title="Created by me:"
-        sessions={sessions.filter(s => s.createdBy === id)}
+        sessions={ownSessions}
       />
       <SessionsList
         title="Created by others:"
-        sessions={sessions.filter(s => s.createdBy !== id)}
+        sessions={visitedSessions}
       />
     </main>
   );
 };
 
-MySessionView.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  onSessionsFetched: PropTypes.func.isRequired,
-  sessions: PropTypes.arrayOf(PropTypes.object).isRequired,
+MySessionsView.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({
-  loading: state.db.loading,
-  sessions: state.db.sessions,
   id: state.auth.id,
 });
 
-const mapDispatch = dispatch => ({
-  onSessionsFetched: snapshot => dispatch(sessionsFetched(snapshot.val())),
-});
-
-export default connect(mapState, mapDispatch)(MySessionView);
+export default connect(mapState)(MySessionsView);
