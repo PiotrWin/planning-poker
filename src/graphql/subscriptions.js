@@ -1,40 +1,23 @@
 import gql from 'graphql-tag';
 
-export const userSessions = gql`
-  subscription ($id: ID!) {
-    User(
+export const USER_SESSIONS = gql`
+  subscription ($userId: ID!) {
+    Session (
       filter: {
         mutation_in: [CREATED, UPDATED, DELETED]
         node: {
-          id: $id
+          createdBy: {
+            id: $userId
+          }
         }
       }
     ) {
-      node {
-        ownSessions {
-          id
-          name
-          createdAt
-          createdBy {
-            id
-            displayName
-          }
-        }
-        visitedSessions {
-          id
-          name
-          createdAt
-          createdBy {
-            id
-            displayName
-          }
-        }
-      }
+      mutation
     }
   }
 `;
 
-export const session = gql`
+export const SESSION = gql`
   subscription ($id: ID!) {
     Session(
       filter: {

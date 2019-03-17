@@ -12,7 +12,7 @@ import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
 import classes from 'components/App/App.scss';
-import { authenticateUser } from 'graphql/mutations';
+import { AUTHENTICATE_USER } from 'graphql/mutations';
 
 const SignInView = lazy(() => import('views/SignIn/SignIn'));
 const EstimateView = lazy(() => import('views/Estimate/Estimate'));
@@ -22,7 +22,7 @@ const SessionView = lazy(() => import('views/Session/Session'));
 export const App = ({
   signedIn, initialized, onUserStateChanged,
 }) => {
-  const authenticate = useMutation(authenticateUser);
+  const authenticate = useMutation(AUTHENTICATE_USER);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (data) => {

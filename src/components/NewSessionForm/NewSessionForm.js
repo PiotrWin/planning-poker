@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { useMutation } from 'react-apollo-hooks';
-import { createSession } from 'graphql/mutations';
+import { CREATE_SESSION } from 'graphql/mutations';
 
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
@@ -13,7 +13,7 @@ import classes from './NewSessionForm.scss';
 const NewSessionForm = ({ id }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState('');
-  const createNewSession = useMutation(createSession, {
+  const createNewSession = useMutation(CREATE_SESSION, {
     variables: {
       name: value,
       createdById: id,

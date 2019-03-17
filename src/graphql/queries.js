@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const getUser = gql`
+export const GET_USER = gql`
   query ($id: ID!) {
     User(id: $id) {
       id
@@ -12,7 +12,7 @@ export const getUser = gql`
   }
 `;
 
-export const getSession = gql`
+export const GET_SESSION = gql`
   query ($id: ID!) {
     Session(id: $id) {
       name
@@ -30,7 +30,7 @@ export const getSession = gql`
   }
 `;
 
-export const getSessions = gql`
+export const GET_SESSIONS = gql`
   query ($id: ID!) {
     User(id: $id) {
       ownSessions {

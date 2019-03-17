@@ -2,38 +2,54 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { useQuery } from 'react-apollo-hooks';
-import { getSessions } from 'graphql/queries';
+import { useQuery, useSubscription } from 'react-apollo-hooks';
+import { GET_SESSIONS } from 'graphql/queries';
+import { USER_SESSIONS } from 'graphql/subscriptions';
 
 import SessionsList from 'components/SessionsList/SessionsList';
 import Loader from 'components/Loader/Loader';
 
 const MySessionsView = ({ id }) => {
+  const variables = { id };
+
   const [ownSessions, setOwnSessions] = useState([]);
   const [visitedSessions, setVisitedSessions] = useState([]);
-  const { loading, data } = useQuery(getSessions, { variables: { id } });
+  const [loading, setLoading] = useState(true);
+
+  const query = useQuery(GET_SESSIONS, { variables }); // TODO: handle error
+
+  useSubscription(USER_SESSIONS, {
+    variables: { userId: id },
+    onSubscriptionData: () => {
+      query.refetch();
+    },
+  });
 
   useEffect(() => {
+    query.refetch();
     // api.sessions.subscribe(onSessionsFetched);
     // return () => api.sessions.unsubscribe(onSessionsFetched);
   }, []);
 
   useEffect(() => {
-    const { User } = data;
-    if (User) {
-      setOwnSessions([...User.ownSessions]);
-      setVisitedSessions([...User.visitedSessions]);
+    if (query.data) {
+      const { User } = query.data;
+      if (User) {
+        setOwnSessions([...User.ownSessions]);
+        setVisitedSessions([...User.visitedSessions]);
+        setLoading(false);
+      }
     }
-  }, [data]);
+  }, [query.data]);
 
-  return loading ? <Loader /> : (
+  return (loading || query.loading) ? <Loader /> : (
     <main>
       <SessionsList
         title="Created by me:"
         sessions={ownSessions}
       />
       <SessionsList
-        title="Created by others:"
+        title="Visited by me:"
         sessions={visitedSessions}
       />
     </main>

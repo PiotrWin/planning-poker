@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const authenticateUser = gql`
+export const AUTHENTICATE_USER = gql`
   mutation (
     $googleToken: String!,
     $displayName: String!,
@@ -18,7 +18,7 @@ export const authenticateUser = gql`
   }
 `;
 
-export const createSession = gql`
+export const CREATE_SESSION = gql`
   mutation ($name: String!, $createdById: ID!) {
     createSession(name: $name, createdById: $createdById) {
       id
@@ -29,5 +29,3 @@ export const createSession = gql`
     }
   }
 `;
-
-// export const updateSession
