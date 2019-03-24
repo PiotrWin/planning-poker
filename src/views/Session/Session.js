@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import api from 'fbase/api';
+// import api from 'fbase/api';
 
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
@@ -13,31 +13,31 @@ const SessionView = ({ match }) => {
   const [session, setSession] = useState('');
   const { id } = match.params;
 
-  const handleSessionChange = async (snapshot) => {
-    try {
-      let sessionData = await snapshot.val();
-      if (!sessionData) {
-        const sessionSnap = await api.session.get(id);
-        sessionData = await sessionSnap.val();
-        if (!sessionData) {
-          throw new Error('404 - session not found');
-        }
-      }
-      api.session.join(id);
-      setSession(sessionData);
-    } catch (e) {
-      setError(e.toString());
-    } finally {
-      setLoading(false);
-    }
+  const handleSessionChange = () => {
+    // try {
+    //   let sessionData = await snapshot.val();
+    //   if (!sessionData) {
+    //     const sessionSnap = await api.session.get(id);
+    //     sessionData = await sessionSnap.val();
+    //     if (!sessionData) {
+    //       throw new Error('404 - session not found');
+    //     }
+    //   }
+    //   api.session.join(id);
+    //   setSession(sessionData);
+    // } catch (e) {
+    //   setError(e.toString());
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   useEffect(() => {
-    api.session.subscribe(id, handleSessionChange);
-    return () => {
-      api.session.unsubscribe(id, handleSessionChange);
-      api.session.leave(id);
-    };
+    // api.session.subscribe(id, handleSessionChange);
+    // return () => {
+    //   api.session.unsubscribe(id, handleSessionChange);
+    //   api.session.leave(id);
+    // };
   }, []);
 
   const errorComponent = (

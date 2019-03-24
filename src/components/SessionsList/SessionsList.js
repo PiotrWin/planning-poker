@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import api from 'fbase/api';
+// import api from 'fbase/api';
 
 import Button from 'components/Button/Button';
 import classes from './SessionsList.scss';
@@ -14,7 +14,8 @@ const SessionsList = ({ sessions, title }) => (
         <li className={classes.ListItem} key={session.id}>
           <Link to={`/sessions/${session.id}`}>{session.name}</Link>
           <Button
-            onClick={() => api.session.remove(session.id)}
+            // onClick={() => api.session.remove(session.id)}
+            onClick={() => {} /*  remove session */}
             className={classes.ButtonRemove}
           >
             x
