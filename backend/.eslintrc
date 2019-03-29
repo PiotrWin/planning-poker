@@ -1,0 +1,25 @@
+{
+  "extends": ["eslint:recommended", "prettier"],
+
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018
+  },
+  "parser": "babel-eslint",
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "globals": {
+    "console": true
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "after-used"
+      }
+    ]
+  }
+}
