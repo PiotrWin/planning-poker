@@ -43,6 +43,13 @@ mongoose
   .connect(process.env.DB_HOST, { useNewUrlParser: true })
   .then(() => {
     app.listen(port);
+
+    process.once('SIGUSR2', () => {
+      app.close(() => {
+        process.kill(process.pid, 'SIGUSR2');
+      });
+    });
+
     console.log(`>> Server started on port ${port}`);
   })
   .catch(console.log);

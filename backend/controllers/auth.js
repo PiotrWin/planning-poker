@@ -8,7 +8,13 @@ const authorize = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ googleId: resp.uid });
-    if (!user) {
+
+    if (user) {
+      res.status(200).json({
+        message: 'User fetched',
+        id: user._id,
+      });
+    } else {
       const newUser = new User({
         name: resp.name,
         email: resp.email,
@@ -17,9 +23,12 @@ const authorize = async (req, res, next) => {
         ownSessions: [],
         visitedSessions: [],
       });
+      const result = await newUser.save();
 
-      await newUser.save();
-      res.status(201).json({ message: 'User created' });
+      res.status(201).json({
+        message: 'User created',
+        id: result._id,
+      });
     }
   } catch (e) {
     if (!e.statusCode) {
@@ -27,8 +36,6 @@ const authorize = async (req, res, next) => {
     }
     next(e);
   }
-
-  res.status(200).json(req.body);
 };
 
 module.exports = {

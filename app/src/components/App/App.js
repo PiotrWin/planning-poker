@@ -7,6 +7,7 @@ import { useMutation } from 'react-apollo-hooks';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
+import { authUser } from 'api/api';
 
 import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
@@ -35,6 +36,9 @@ export const App = ({
             email: data.email,
           },
         });
+
+        const response2 = await authUser();
+        console.log(response2);
         onUserStateChanged(response.data.authenticateGoogleUser);
       } else {
         onUserStateChanged(null);

@@ -46,21 +46,19 @@ const SessionView = ({ match }) => {
       <Link to="/my-sessions">{'<- back to sessions'}</Link>
     </React.Fragment>
   );
-  const component = (loading ? <Loader /> : (
+  const component = loading ? (
+    <Loader />
+  ) : (
     <React.Fragment>
       <ClientList clients={session.clients} />
       <main>
         <h2>{session.name}</h2>
-        <span>Created:{' '}</span>
-        <span>
-          {moment(session.created).format('dddd, MMMM Do YYYY, h:mm A')}
-        </span>
-        <div>
-          {JSON.stringify(session.clients, null, 2)}
-        </div>
+        <span>Created: </span>
+        <span>{moment(session.created).format('dddd, MMMM Do YYYY, h:mm A')}</span>
+        <div>{JSON.stringify(session.clients, null, 2)}</div>
       </main>
     </React.Fragment>
-  ));
+  );
 
   return !error ? component : errorComponent;
 };
