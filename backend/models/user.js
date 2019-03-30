@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+const mongoose = require('mongoose');
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -9,26 +9,26 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  googleToken: {
+  googleId: {
     type: String,
     default: '',
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   ownSessions: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Session',
     },
   ],
   visitedSessions: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Session',
     },
   ],
 });
 
-export default model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

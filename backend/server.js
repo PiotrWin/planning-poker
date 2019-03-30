@@ -1,12 +1,22 @@
-const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
-const authRoutes = require('./routes/auth');
-
 dotenv.config();
 
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const fbadmin = require('firebase-admin');
+
+const serviceAccount = require('./serviceAccount');
+const authRoutes = require('./routes/auth');
 const app = express();
+const port = 4000;
+
+fbadmin.initializeApp({
+  credential: fbadmin.credential.cert(serviceAccount),
+  databaseURL: process.env.FB_DB_URL,
+});
+
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,6 +42,7 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(process.env.DB_HOST, { useNewUrlParser: true })
   .then(() => {
-    app.listen(4000);
+    app.listen(port);
+    console.log(`>> Server started on port ${port}`);
   })
   .catch(console.log);
