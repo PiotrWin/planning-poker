@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { useMutation } from 'react-apollo-hooks';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
@@ -13,7 +12,6 @@ import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
 import Loader from 'components/Loader/Loader';
 import classes from 'components/App/App.scss';
-import { AUTHENTICATE_USER } from 'graphql/mutations';
 
 const SignInView = lazy(() => import('views/SignIn/SignIn'));
 const EstimateView = lazy(() => import('views/Estimate/Estimate'));
@@ -23,23 +21,11 @@ const SessionView = lazy(() => import('views/Session/Session'));
 export const App = ({
   signedIn, initialized, onUserStateChanged,
 }) => {
-  const authenticate = useMutation(AUTHENTICATE_USER);
-
   useEffect(() => {
     auth.onAuthStateChanged(async (data) => {
       if (data) {
-        const token = await auth.currentUser.getIdToken();
-        const response = await authenticate({
-          variables: {
-            googleToken: token,
-            displayName: data.displayName,
-            email: data.email,
-          },
-        });
-
-        const response2 = await authUser();
-        console.log(response2);
-        onUserStateChanged(response.data.authenticateGoogleUser);
+        const userId = await authUser();
+        onUserStateChanged(userId);
       } else {
         onUserStateChanged(null);
       }

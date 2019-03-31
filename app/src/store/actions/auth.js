@@ -9,9 +9,9 @@ export const setUser = user => ({
   user,
 });
 
-export const userStateChanged = user => ({
+export const userStateChanged = userId => ({
   type: actionTypes.AUTH_STATE_CHANGED,
-  user,
+  userId,
 });
 
 export const signIn = () => ({

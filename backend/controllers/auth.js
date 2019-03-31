@@ -1,36 +1,23 @@
-const admin = require('firebase-admin');
-
 const User = require('../models/user');
 
 const authorize = async (req, res, next) => {
-  const { token } = req.body;
-  const resp = await admin.auth().verifyIdToken(token);
-
   try {
-    const user = await User.findOne({ googleId: resp.uid });
+    const { userData } = req.locals;
+    const user = await User.findById(userData.uid);
 
     if (user) {
-      res.status(200).json({
-        message: 'User fetched',
-        id: user._id,
-      });
+      res.status(200).json({ id: user._id });
     } else {
       const newUser = new User({
-        name: resp.name,
-        email: resp.email,
-        googleId: resp.uid,
-        createdAt: Date.now(),
-        ownSessions: [],
-        visitedSessions: [],
+        _id: userData.uid,
+        name: userData.name,
+        email: userData.email,
       });
       const result = await newUser.save();
-
-      res.status(201).json({
-        message: 'User created',
-        id: result._id,
-      });
+      res.status(201).json({ id: result._id });
     }
   } catch (e) {
+    console.log('error', e);
     if (!e.statusCode) {
       e.statusCode = 500;
     }

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const fbadmin = require('firebase-admin');
 
 const serviceAccount = require('./serviceAccount');
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth');  
 const app = express();
 const port = 4000;
 

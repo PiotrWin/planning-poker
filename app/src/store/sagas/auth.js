@@ -8,11 +8,12 @@ export function* signOutSaga() {
   yield auth.signOut();
 }
 
-export function* stateChangedSaga({ user }) {
-  if (user) {
-    const userData = getUserData(user);
-    yield put(setUser(userData));
+export function* stateChangedSaga({ userId }) {
+  const { currentUser } = auth;
+  if (userId && userId === auth.currentUser.uid) {
+    yield put(setUser(getUserData(currentUser)));
   }
+
   const isInitialized = yield select(initialAuthFinished);
   if (!isInitialized) {
     yield put(initialized());
