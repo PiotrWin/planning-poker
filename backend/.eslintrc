@@ -1,6 +1,5 @@
 {
   "extends": ["eslint:recommended", "prettier"],
-
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2018
@@ -20,6 +19,8 @@
       {
         "args": "after-used"
       }
-    ]
+    ],
+    "semi": "error",
+    "indent": ["error", 2]
   }
 }

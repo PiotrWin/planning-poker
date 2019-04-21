@@ -25,4 +25,11 @@ export const authUser = async () => {
   return response.data.id;
 };
 
-export const placeholder = null;
+export const addSession = async (name, uid) => {
+  const response = await instance.post('/sessions', {
+    uid,
+    name,
+  });
+
+  console.log(response);
+};

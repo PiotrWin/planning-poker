@@ -1,31 +1,38 @@
 "use strict";
 
-var _express = _interopRequireDefault(require("express"));
+var dotenv = require('dotenv');
 
-var _mongoose = _interopRequireDefault(require("mongoose"));
+dotenv.config();
 
-var _dotenv = _interopRequireDefault(require("dotenv"));
+var express = require('express');
 
-var _auth = _interopRequireDefault(require("./routes/auth"));
+var mongoose = require('mongoose');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var bodyParser = require('body-parser');
 
-_dotenv.default.config();
+var fbadmin = require('firebase-admin');
 
-var app = (0, _express.default)();
-app.use('/', function (req, res, next) {
-  res.status(200).json({
-    test: 'dupa'
-  });
-  console.log('dupa');
+var serviceAccount = require('./serviceAccount');
+
+var authRoutes = require('./routes/auth');
+
+var app = express();
+var port = 4000;
+fbadmin.initializeApp({
+  credential: fbadmin.credential.cert(serviceAccount),
+  databaseURL: process.env.FB_DB_URL
 });
-app.use(function (req, res) {
+app.use(bodyParser.json());
+app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
 });
-app.use('/auth', _auth.default);
-app.use(function (error, req, res) {
+app.use('/auth', authRoutes);
+/* eslint-disable-next-line no-unused-vars */
+
+app.use(function (error, req, res, next) {
   console.log(error);
   var status = error.statusCode || 500;
   var message = error.message;
@@ -35,7 +42,14 @@ app.use(function (error, req, res) {
     data: data
   });
 });
-
-_mongoose.default.connect(process.env.DB_HOST).then(function () {
-  app.listen(4000);
-}).catch(console.log);
+mongoose.connect(process.env.DB_HOST, {
+  useNewUrlParser: true
+}).then(function () {
+  app.listen(port);
+  process.once('SIGUSR2', function () {
+    app.close(function () {
+      process.kill(process.pid, 'SIGUSR2');
+    });
+  });
+  console.log(">> Server started on port ".concat(port));
+})["catch"](console.log);

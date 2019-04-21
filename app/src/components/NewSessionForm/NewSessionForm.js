@@ -1,34 +1,37 @@
-import React, { useEffect, useState, useRef } from 'react';
+import
+React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { useMutation } from 'react-apollo-hooks';
-import { CREATE_SESSION } from 'graphql/mutations';
+import { addSession } from 'store/actions/db';
 
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import classes from './NewSessionForm.scss';
 
-const NewSessionForm = ({ id }) => {
+const NewSessionForm = ({ id, addNewSession }) => {
   const inputRef = useRef(null);
   const [value, setValue] = useState('');
-  const createNewSession = useMutation(CREATE_SESSION, {
-    variables: {
-      name: value,
-      createdById: id,
-    },
-  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (value.length) {
-      await createNewSession();
-      setValue('');
-    }
-  };
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (value.length) {
+        addNewSession(value, id);
+        setValue('');
+      }
+    }, [value]);
 
-  const handleChange = e => setValue(e.target.value);
+  const handleChange = useCallback(
+    e => setValue(e.target.value),
+    [value],
+  );
 
   useEffect(() => {
     inputRef.current.focus();
@@ -59,10 +62,15 @@ const NewSessionForm = ({ id }) => {
 
 NewSessionForm.propTypes = {
   id: PropTypes.string.isRequired,
+  addNewSession: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
   id: state.auth.id,
 });
 
-export default connect(mapState)(NewSessionForm);
+const mapDispatch = {
+  addNewSession: addSession,
+};
+
+export default connect(mapState, mapDispatch)(NewSessionForm);

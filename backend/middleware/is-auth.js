@@ -7,6 +7,7 @@ module.exports = async (req, res, next) => {
     error.statusCode = 401;
 
     next(error);
+    return;
   }
 
   const token = authHeader.split(' ')[1];

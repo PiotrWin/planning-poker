@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src/server.js -d dist",
+    "build": "babel server.js -d dist",
     "start": "nodemon server.js",
     "start server": "node server.js"
   },

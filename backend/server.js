@@ -7,7 +7,10 @@ const bodyParser = require('body-parser');
 const fbadmin = require('firebase-admin');
 
 const serviceAccount = require('./serviceAccount');
+
 const authRoutes = require('./routes/auth');  
+const sessionRoutes = require('./routes/sessions');
+
 const app = express();
 const port = 4000;
 
@@ -29,6 +32,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
+app.use('/sessions', sessionRoutes);
 
 /* eslint-disable-next-line no-unused-vars */
 app.use((error, req, res, next) => {
