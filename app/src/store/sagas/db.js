@@ -1,6 +1,8 @@
 import { put, select } from 'redux-saga/effects';
-import * as actions from 'store/actions/db';
 import { userId } from 'store/selectors';
+import {
+  sessionsFetched,
+} from 'store/actions/db';
 import history from 'utils/history';
 
 import * as API from 'api/api';
@@ -19,10 +21,16 @@ import * as API from 'api/api';
 // }
 
 export function* addSession({ sessionName }) {
-  const uid = yield select(userId);
-  const response = yield API.addSession(sessionName, uid);
+  const id = yield select(userId);
+  const response = yield API.addSession(id, sessionName);
   console.log(response);
   // history.push(`/sessions/${id}`);
 }
 
-export const test = 0;
+export function* getSessions() {
+  const id = yield select(userId);
+  const sessions = yield API.getUserSessions(id);
+
+  console.log(sessions);
+  yield put(sessionsFetched(sessions));
+}

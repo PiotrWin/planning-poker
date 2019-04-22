@@ -9,7 +9,7 @@ const fbadmin = require('firebase-admin');
 const serviceAccount = require('./serviceAccount');
 
 const authRoutes = require('./routes/auth');  
-const sessionRoutes = require('./routes/sessions');
+const userRoutes = require('./routes/user');
 
 const app = express();
 const port = 4000;
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
-app.use('/sessions', sessionRoutes);
+app.use('/user', userRoutes);
 
 /* eslint-disable-next-line no-unused-vars */
 app.use((error, req, res, next) => {
@@ -46,10 +46,10 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(process.env.DB_HOST, { useNewUrlParser: true })
   .then(() => {
-    app.listen(port);
+    const server = app.listen(port);
 
     process.once('SIGUSR2', () => {
-      app.close(() => {
+      server.close(() => {
         process.kill(process.pid, 'SIGUSR2');
       });
     });

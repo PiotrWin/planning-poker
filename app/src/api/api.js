@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { auth } from 'fbase/firebase';
 
-const instance = axios.create({
+const endpoint = axios.create({
   baseURL: 'http://localhost:4000',
   timeout: 5000,
 });
 
 /* eslint-disable no-param-reassign */
-instance.interceptors.request.use(async (config) => {
+endpoint.interceptors.request.use(async (config) => {
   const token = await auth.currentUser.getIdToken();
 
   config.headers.common = {
@@ -20,13 +20,12 @@ instance.interceptors.request.use(async (config) => {
 /* eslint-enable no-param-reassign */
 
 export const authUser = async () => {
-  // TODO: handle error
   const {
     data: {
       id,
       gid,
     },
-  } = await instance.post('/auth');
+  } = await endpoint.post('/auth');
 
   return {
     id,
@@ -34,11 +33,11 @@ export const authUser = async () => {
   };
 };
 
-export const addSession = async (name, uid) => {
-  const response = await instance.post('/sessions', {
-    uid,
+export const addSession = (id, name) =>
+  endpoint.post(`/user/${id}/sessions`, {
+    id,
     name,
   });
 
-  console.log(response);
-};
+export const getUserSessions = id => endpoint.get(`/user/${id}/sessions`);
+

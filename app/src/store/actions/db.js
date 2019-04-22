@@ -22,12 +22,15 @@ export const getSessions = () => ({
 
 export const sessionsFetched = (items) => {
   let sessions = [];
+  console.log('in fetched, items: ', items);
   if (items) {
     sessions = Object.keys(items).map(key => ({
       id: key,
       ...items[key],
     }));
   }
+
+  console.log('in fetched, sessions: ', sessions);
   return {
     type: actionTypes.DB_SESSIONS_FETCHED,
     sessions,

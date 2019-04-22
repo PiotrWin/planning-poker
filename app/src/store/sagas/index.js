@@ -14,7 +14,7 @@ export function* watchAuth() {
 export function* watchDb() {
   yield all([
     takeLatest(actionTypes.DB_ADD_SESSION, dbSagas.addSession),
-    // takeLatest(actionTypes.DB_GET_SESSIONS, dbSagas.getSessions),
+    takeLatest(actionTypes.DB_GET_SESSIONS, dbSagas.getSessions),
     // takeLatest(actionTypes.DB_JOIN_SESSION, dbSagas.joinSession),
   ]);
 }

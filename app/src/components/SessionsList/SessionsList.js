@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-// import api from 'fbase/api';
 
 import Button from 'components/Button/Button';
 import classes from './SessionsList.scss';

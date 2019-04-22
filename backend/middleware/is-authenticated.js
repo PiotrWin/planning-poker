@@ -8,10 +8,8 @@ module.exports = async (req, res, next) => {
 
     next(error);
     return;
-  }
-
-  const token = authHeader.split(' ')[1];
-  try {
+  } else try {
+    const token = authHeader.split(' ')[1];
     const response = await admin.auth().verifyIdToken(token);
     req.locals = {
       userData: response,
