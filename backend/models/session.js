@@ -14,7 +14,7 @@ const sessionSchema = new mongoose.Schema({
     default: Date.now,
   },
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'User',
     required: true,
   },

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 
 import { userStateChanged } from 'store/actions/auth';
 import { auth } from 'fbase/firebase';
-import { authUser } from 'api/api';
 
 import Navigation from 'components/Navigation/Navigation';
 import ConditionalRoute from 'components/ConditionalRoute/ConditionalRoute';
@@ -22,14 +21,7 @@ export const App = ({
   signedIn, initialized, onUserStateChanged,
 }) => {
   useEffect(() => {
-    auth.onAuthStateChanged(async (data) => {
-      if (data) {
-        const userId = await authUser();
-        onUserStateChanged(userId);
-      } else {
-        onUserStateChanged(null);
-      }
-    });
+    auth.onAuthStateChanged(onUserStateChanged);
     return () => auth.onAuthStateChanged(null);
   }, []);
 
@@ -85,9 +77,9 @@ const mapState = state => ({
   initialized: state.auth.initialAuthFinished,
 });
 
-const mapDispatch = dispatch => ({
-  onUserStateChanged: user => dispatch(userStateChanged(user)),
-});
+const mapDispatch = {
+  onUserStateChanged: userStateChanged,
+};
 
 
 export default hot(module)(connect(

@@ -21,8 +21,17 @@ instance.interceptors.request.use(async (config) => {
 
 export const authUser = async () => {
   // TODO: handle error
-  const response = await instance.post('/auth');
-  return response.data.id;
+  const {
+    data: {
+      id,
+      gid,
+    },
+  } = await instance.post('/auth');
+
+  return {
+    id,
+    gid,
+  };
 };
 
 export const addSession = async (name, uid) => {

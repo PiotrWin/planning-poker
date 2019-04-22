@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
   {
-    _id: {
+    gid: {
       type: String,
       required: true,
     },
@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
-  { _id: false }
 );
 
 module.exports = mongoose.model('User', userSchema);

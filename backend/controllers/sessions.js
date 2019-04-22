@@ -1,10 +1,21 @@
 const Session = require('../models/session');
 
-const add = async (req, res) => {
-  const { uid, name } = req.body;
-  console.log(uid, name);
+const add = async (req, res, next) => {
+  try {
+    const { uid, name } = req.body;
+    const session = new Session({
+      name,
+      createdBy: uid,
+    });
 
-  res.status(200).json({ ok: true });
+    const result = await session.save();
+    res.status(201).json({ result });
+  } catch (e) {
+    if (!e.statusCode) {
+      e.statusCode = 500;
+    }
+    next(e);
+  }
 };
 
 module.exports = {
