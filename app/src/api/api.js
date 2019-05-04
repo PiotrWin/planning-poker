@@ -39,5 +39,8 @@ export const addSession = (id, name) =>
     name,
   });
 
+export const removeSession = (userId, sessionId) =>
+  endpoint.delete(`/user/${userId}/sessions/${sessionId}`);
+
 export const getUserSessions = id => endpoint.get(`/user/${id}/sessions`);
 

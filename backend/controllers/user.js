@@ -51,7 +51,39 @@ const getSessions = async (req, res, next) => {
   }
 };
 
+const removeSession = async (req, res, next) => {
+  try {
+    const { id, session_id } = req.params;
+    const user = await User.findById(id);
+    const { ownSessions, visitedSessions } = user;
+
+    let selectedSet;
+    if (ownSessions.find(id => id.toString() === session_id)) {
+      selectedSet = 'ownSessions';
+    } else if (visitedSessions.find(id => id.toString() === session_id)) {
+      selectedSet = 'visitedSessions';
+    }
+
+    if (selectedSet) {
+      await User.findByIdAndUpdate(
+        id, 
+        { '$pull': { [selectedSet]: session_id } },
+      );
+      res.status(200).send(`Removed ${session_id}`);
+    } else {
+      res.status(404).send('Session with given ID was not found');
+    }
+
+  } catch (e) {
+    if (!e.statusCode) {
+      e.statusCode = 500;
+    }
+    next(e);
+  }
+};
+
 module.exports = {
-  addSession,
   getSessions,
+  addSession,
+  removeSession
 };

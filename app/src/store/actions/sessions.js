@@ -20,6 +20,11 @@ export const getSessions = () => ({
   type: actionTypes.SESSIONS_GET_SESSIONS,
 });
 
+export const removeSession = sessionId => ({
+  type: actionTypes.SESSIONS_REMOVE_SESSION,
+  sessionId,
+});
+
 export const sessionsFetched = sessions => ({
   type: actionTypes.SESSIONS_SESSIONS_FETCHED,
   sessions,

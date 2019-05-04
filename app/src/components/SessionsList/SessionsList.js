@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import classes from './SessionsList.scss';
 
-const SessionsList = ({ sessions, title }) => (
+const SessionsList = ({ sessions, title, handleRemove }) => (
   <div className={classes.ListWrapper}>
     {title && <h2>{title}</h2>}
     <ul className={classes.List}>
@@ -13,8 +13,7 @@ const SessionsList = ({ sessions, title }) => (
         <li className={classes.ListItem} key={id}>
           <Link to={`/sessions/${id}`}>{name}</Link>
           <Button
-            // onClick={() => api.session.remove(session.id)}
-            onClick={() => {} /*  remove session */}
+            onClick={() => handleRemove(id)}
             className={classes.ButtonRemove}
           >
             x
@@ -28,6 +27,7 @@ const SessionsList = ({ sessions, title }) => (
 SessionsList.propTypes = {
   sessions: PropTypes.arrayOf(PropTypes.object).isRequired,
   title: PropTypes.string,
+  handleRemove: PropTypes.func.isRequired,
 };
 
 SessionsList.defaultProps = {

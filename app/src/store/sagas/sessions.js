@@ -1,4 +1,4 @@
-import { put, select } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import { getUserId } from 'store/selectors';
 import {
   sessionsFetched,
@@ -31,4 +31,11 @@ export function* getSessions() {
   const { data: sessions } = yield API.getUserSessions(id);
 
   yield put(sessionsFetched(sessions));
+}
+
+export function* removeSession({ sessionId }) {
+  const userId = yield select(getUserId);
+  yield API.removeSession(userId, sessionId);
+
+  yield call(getSessions);
 }

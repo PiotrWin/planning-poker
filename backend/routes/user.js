@@ -1,22 +1,20 @@
 const express = require('express');
-const userController = require('../controllers/user');
-const isAuthenticated = require('../middleware/is-authenticated');
-const isAuthorized = require('../middleware/is-authorized');
+const isAuthenticated = require('../middleware/isAuthenticated');
+const isAuthorized = require('../middleware/isAuthorized');
+const {
+  addSession,
+  removeSession,
+  getSessions,
+} = require('../controllers/user');
 
 const router = express.Router();
 
-router.get(
-  '/:id/sessions',
-  isAuthenticated,
-  isAuthorized,
-  userController.getSessions
-);
+router.all('/', isAuthenticated, isAuthorized);
 
-router.post(
-  '/:id/sessions',
-  isAuthenticated,
-  isAuthorized,
-  userController.addSession
-);
+router.get('/:id/sessions', getSessions);
+
+router.post('/:id/sessions', addSession);
+
+router.delete('/:id/sessions/:session_id', removeSession);
 
 module.exports = router;
