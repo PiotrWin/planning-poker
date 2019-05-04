@@ -3,7 +3,7 @@ import { auth } from 'fbase/firebase';
 import * as API from 'api/api';
 
 import { setUser, initialized } from '../actions/auth';
-import { initialAuthFinished } from '../selectors';
+import { getInitialAuthFinished } from '../selectors';
 
 export function* signOutSaga() {
   yield auth.signOut();
@@ -30,7 +30,7 @@ export function* stateChangedSaga({ currentUser }) {
     }));
   }
 
-  const isInitialized = yield select(initialAuthFinished);
+  const isInitialized = yield select(getInitialAuthFinished);
   if (!isInitialized) {
     yield put(initialized());
   }

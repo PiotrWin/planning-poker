@@ -2,7 +2,7 @@ import { all, takeLatest } from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/actionTypes';
 import * as authSagas from './auth';
-import * as dbSagas from './db';
+import * as sessionsSagas from './sessions';
 
 export function* watchAuth() {
   yield all([
@@ -11,10 +11,10 @@ export function* watchAuth() {
   ]);
 }
 
-export function* watchDb() {
+export function* watchSessions() {
   yield all([
-    takeLatest(actionTypes.DB_ADD_SESSION, dbSagas.addSession),
-    takeLatest(actionTypes.DB_GET_SESSIONS, dbSagas.getSessions),
+    takeLatest(actionTypes.SESSIONS_ADD_SESSION, sessionsSagas.addSession),
+    takeLatest(actionTypes.SESSIONS_GET_SESSIONS, sessionsSagas.getSessions),
     // takeLatest(actionTypes.DB_JOIN_SESSION, dbSagas.joinSession),
   ]);
 }

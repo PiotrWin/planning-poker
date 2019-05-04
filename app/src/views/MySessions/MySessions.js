@@ -1,46 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getSessions } from 'store/actions/db';
+import { getSessions } from 'store/actions/sessions';
+import {
+  getAllSessions,
+  getSessionsLoading,
+} from 'store/selectors';
 
 import SessionsList from 'components/SessionsList/SessionsList';
 import Loader from 'components/Loader/Loader';
 
-const MySessionsView = ({ id, onGetSessions }) => {
-  const [ownSessions, setOwnSessions] = useState([]);
-  const [visitedSessions, setVisitedSessions] = useState([]);
-  const [loading, setLoading] = useState(true);
+const MySessionsView = ({
+  sessions, loading, onGetSessions,
+}) => {
+  const { ownSessions, visitedSessions } = sessions;
 
   useEffect(() => {
     onGetSessions();
   }, []);
-
-  // const query = useQuery(GET_SESSIONS, { variables }); // TODO: handle error
-
-  // useSubscription(USER_SESSIONS, {
-  //   variables: { userId: id },
-  //   onSubscriptionData: () => {
-  //     query.refetch();
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   query.refetch();
-  //   // api.sessions.subscribe(onSessionsFetched);
-  //   // return () => api.sessions.unsubscribe(onSessionsFetched);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (query.data) {
-  //     const { User } = query.data;
-  //     if (User) {
-  //       setOwnSessions([...User.ownSessions]);
-  //       setVisitedSessions([...User.visitedSessions]);
-  //       setLoading(false);
-  //     }
-  //   }
-  // }, [query.data]);
 
   return (loading) ? <Loader /> : (
     <main>
@@ -57,12 +35,14 @@ const MySessionsView = ({ id, onGetSessions }) => {
 };
 
 MySessionsView.propTypes = {
-  id: PropTypes.string.isRequired,
+  sessions: PropTypes.shape({}).isRequired,
+  loading: PropTypes.bool.isRequired,
   onGetSessions: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-  id: state.auth.id,
+  sessions: getAllSessions(state),
+  loading: getSessionsLoading(state),
 });
 
 const mapDispatch = {

@@ -14,7 +14,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   auth: reducers.authReducer,
-  db: reducers.dbReducer,
+  sessions: reducers.sessionsReducer,
 });
 
 const sagaMiddleWare = createSagaMiddleware();
@@ -25,6 +25,6 @@ const store = createStore(
 );
 
 sagaMiddleWare.run(watchers.watchAuth);
-sagaMiddleWare.run(watchers.watchDb);
+sagaMiddleWare.run(watchers.watchSessions);
 
 export default store;

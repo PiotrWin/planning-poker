@@ -8,7 +8,7 @@ React, {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { addSession } from 'store/actions/db';
+import { addSession } from 'store/actions/sessions';
 
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';

@@ -9,9 +9,9 @@ const SessionsList = ({ sessions, title }) => (
   <div className={classes.ListWrapper}>
     {title && <h2>{title}</h2>}
     <ul className={classes.List}>
-      {sessions.map(session => (
-        <li className={classes.ListItem} key={session.id}>
-          <Link to={`/sessions/${session.id}`}>{session.name}</Link>
+      {sessions.map(({ _id: id, name }) => (
+        <li className={classes.ListItem} key={id}>
+          <Link to={`/sessions/${id}`}>{name}</Link>
           <Button
             // onClick={() => api.session.remove(session.id)}
             onClick={() => {} /*  remove session */}

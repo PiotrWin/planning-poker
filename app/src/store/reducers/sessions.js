@@ -1,10 +1,10 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  sessions: [],
+  ownSessions: [],
+  visitedSessions: [],
   loading: true,
   initialFetchDone: false,
-  userPath: '',
   currentSession: '',
 };
 
@@ -13,28 +13,29 @@ const reducer = (state = initialState, action) => {
     case actionTypes.AUTH_SIGN_OUT: {
       return { ...initialState };
     }
-    case actionTypes.DB_SET_USER_PATH: {
-      return {
-        ...state,
-        userPath: action.path,
-      };
-    }
-    case actionTypes.DB_GET_SESSIONS: {
+    case actionTypes.SESSIONS_GET_SESSIONS: {
       return {
         ...state,
         loading: true,
       };
     }
-    case actionTypes.DB_SESSIONS_FETCHED: {
-      console.log(action.sessions);
+    case actionTypes.SESSIONS_SESSIONS_FETCHED: {
+      const {
+        sessions: {
+          ownSessions,
+          visitedSessions,
+        },
+      } = action;
+
       return {
         ...state,
-        sessions: action.sessions,
+        ownSessions,
+        visitedSessions,
         loading: false,
         initialFetchDone: state.initialFetchDone || true,
       };
     }
-    case actionTypes.DB_JOINED_SESSION: {
+    case actionTypes.SESSIONS_JOINED_SESSION: {
       return {
         ...state,
         currentSession: action.id,

@@ -1,9 +1,9 @@
 import authReducer from './auth';
-import dbReducer from './db';
+import sessionsReducer from './sessions';
 import uiReducer from './ui';
 
 export {
   authReducer,
-  dbReducer,
+  sessionsReducer,
   uiReducer,
 };
