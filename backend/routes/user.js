@@ -5,11 +5,18 @@ const isAuthorized = require('../middleware/is-authorized');
 
 const router = express.Router();
 
+router.get(
+  '/:id/sessions',
+  isAuthenticated,
+  isAuthorized,
+  userController.getSessions
+);
+
 router.post(
   '/:id/sessions',
   isAuthenticated,
   isAuthorized,
-  userController.add
+  userController.addSession
 );
 
 module.exports = router;

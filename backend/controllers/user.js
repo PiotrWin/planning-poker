@@ -2,15 +2,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const Session = require('../models/session');
 const User = require('../models/user');
 
-const add = async (req, res, next) => {
-  if (req.body.id !== req.params.id) {
-    const error = new Error('Not authorized');
-    error.statusCode = 403;
-    
-    next(error);
-    return;
-  }
-  
+const addSession = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
@@ -28,7 +20,9 @@ const add = async (req, res, next) => {
       { '$push': { 'ownSessions': ObjectId(_id) } },
     );
 
-    res.status(201).json({ id: _id, name });
+    res
+      .status(201)
+      .json({ id: _id, name });
   } catch (e) {
     if (!e.statusCode) {
       e.statusCode = 500;
@@ -37,6 +31,27 @@ const add = async (req, res, next) => {
   }
 };
 
+const getSessions = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User
+      .findById(id)
+      .populate({ path: 'ownSessions', select: 'name' })
+      .populate({ path: 'visitedSessions', select: 'name' });
+    const { ownSessions, visitedSessions } = user;
+
+    res
+      .status(200)
+      .json({ ownSessions, visitedSessions });
+  } catch (e) {
+    if (!e.statusCode) {
+      e.statucCode = 500;
+    }
+    next(e);
+  }
+};
+
 module.exports = {
-  add,
+  addSession,
+  getSessions,
 };
