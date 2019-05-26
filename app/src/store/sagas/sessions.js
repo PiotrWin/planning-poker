@@ -22,8 +22,9 @@ import * as API from 'api/api';
 
 export function* addSession({ sessionName }) {
   const id = yield select(getUserId);
-  const response = yield API.addSession(id, sessionName);
-  // history.push(`/sessions/${id}`);
+
+  yield API.addSession(id, sessionName);
+  history.push(`/sessions/${id}`);
 }
 
 export function* getSessions() {

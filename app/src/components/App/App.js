@@ -5,6 +5,7 @@ import { Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { userStateChanged } from 'store/actions/auth';
+import { connect as ioConnect } from 'store/actions/io';
 import { auth } from 'fbase/firebase';
 
 import Navigation from 'components/Navigation/Navigation';
@@ -18,10 +19,12 @@ const MySessionsView = lazy(() => import('views/MySessions/MySessions'));
 const SessionView = lazy(() => import('views/Session/Session'));
 
 export const App = ({
-  signedIn, initialized, onUserStateChanged,
+  signedIn, initialized, onUserStateChanged, onIoConnect,
 }) => {
   useEffect(() => {
     auth.onAuthStateChanged(onUserStateChanged);
+    onIoConnect();
+
     return () => auth.onAuthStateChanged(null);
   }, []);
 
@@ -70,6 +73,7 @@ App.propTypes = {
   signedIn: PropTypes.bool.isRequired,
   initialized: PropTypes.bool.isRequired,
   onUserStateChanged: PropTypes.func.isRequired,
+  onIoConnect: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -79,6 +83,7 @@ const mapState = state => ({
 
 const mapDispatch = {
   onUserStateChanged: userStateChanged,
+  onIoConnect: ioConnect,
 };
 
 

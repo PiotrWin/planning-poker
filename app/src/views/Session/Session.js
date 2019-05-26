@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-// import api from 'fbase/api';
 
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';

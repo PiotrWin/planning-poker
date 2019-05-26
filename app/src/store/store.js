@@ -17,14 +17,15 @@ const rootReducer = combineReducers({
   sessions: reducers.sessionsReducer,
 });
 
-const sagaMiddleWare = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleWare)),
+  composeEnhancers(applyMiddleware(sagaMiddleware)),
 );
 
-sagaMiddleWare.run(watchers.watchAuth);
-sagaMiddleWare.run(watchers.watchSessions);
+for (const key in watchers) {
+  sagaMiddleware.run(watchers[key]);
+}
 
 export default store;

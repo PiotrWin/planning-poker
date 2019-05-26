@@ -18,6 +18,8 @@ module.exports = {
     },
   },
   rules: {
+    'guard-for-in': 0,
+    'no-restricted-syntax': 0,
     'react/jsx-filename-extension': [
       2, { extensions: ['.js'] },
     ],

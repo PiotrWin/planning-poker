@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const fbadmin = require('firebase-admin');
@@ -11,8 +10,16 @@ const serviceAccount = require('./serviceAccount');
 const authRoutes = require('./routes/auth');  
 const userRoutes = require('./routes/user');
 
-const app = express();
-const port = 4000;
+const {
+  app,
+  http,
+  io,
+} = require('./servers');
+
+const ports = {
+  app: 4000,
+  io: 80,
+};
 
 fbadmin.initializeApp({
   credential: fbadmin.credential.cert(serviceAccount),
@@ -46,7 +53,12 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(process.env.DB_HOST, { useNewUrlParser: true })
   .then(() => {
-    const server = app.listen(port);
+    const server = app.listen(ports.app);
+    http.listen(ports.io);
+
+    io.on('connection', socket => {
+      console.log('connected', socket);
+    });
 
     process.once('SIGUSR2', () => {
       server.close(() => {
@@ -54,6 +66,6 @@ mongoose
       });
     });
 
-    console.log(`>> Server started on port ${port}`);
+    console.log(`>> Server started on port ${ports.app}`);
   })
   .catch(console.log);
